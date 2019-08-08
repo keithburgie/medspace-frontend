@@ -1,19 +1,23 @@
 import React from 'react';
 // import assets from './routes'
-import logo from '../src/assets/images/logo.svg';
+// import logo from '../src/assets/images/logo.svg';
 import '../src/assets/styles/App.scss';
+import SchoolsList from './components/schools-list'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+
+  render() {
+    return (
+      <div className="App">
+        <header className="App-header">
+          <SchoolsList />
+            {/* School */}
+            {/* School */}
+            {/* School */}
+        </header>
+      </div>
+    );
+  }
 }
 
 export default App;

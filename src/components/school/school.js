@@ -1,9 +1,8 @@
 // component-name-view.js is your stateless view Template. For the majority of cases, this Template should be able to be pure functional Template (no hooks!).
 import React, {Fragment} from 'react';
-import styles from './school.module.scss';
 
 function School(props) {
-  const {school} = props
+  const {school, styles} = props
 
   return (
     <Fragment>

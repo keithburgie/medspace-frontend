@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Collapse, Button} from 'reactstrap';
 import styles from './school.module.scss';
-import School from './school';
+// import School from './school-view';
 
 class SchoolContainer extends Component {
+
   constructor(props) {
     super(props);
 
@@ -45,27 +46,32 @@ class SchoolContainer extends Component {
     const {school} = this.props
 
     return (
-      <div>
-        <Button 
-          color="primary" 
-          onClick={(e) => this.fadeToggle(e)} 
-          data-id={school.id}
-          style={{ marginBottom: '1rem' }}>
-            Toggle
-        </Button>
+      <div className={styles.schoolWrapper}>
 
-        <h5>Current state: {this.state.status}</h5>
+        <div className={styles.collapseHeader}>
 
-        <Collapse
-          isOpen={this.state.collapse}
-          onEntering={this.onEntering}
-          onEntered={this.onEntered}
-          onExiting={this.onExiting}
-          onExited={this.onExited}>
+          <div className={styles.buttonWrapper}>
+            <Button color="secondary" onClick={(e) => this.fadeToggle(e)} data-id={school.id} >
+                {this.state.collapse ? "-" : "+" }
+            </Button>
 
-          <School school={school} styles={styles} />
+            <small className={styles.containerStatus}>{this.state.status}</small>
+          </div>
 
+          <div>
+            {/* If name is really long, cut off at the comma */}
+            <p><strong>{school.name.split(',')[0]}</strong></p>
+          </div>
+
+        </div>
+
+        <Collapse isOpen={this.state.collapse} 
+          onEntering={this.onEntering} onEntered={this.onEntered}
+          onExiting={this.onExiting} onExited={this.onExited}>
+
+          <p className={styles.small}>{school.city}, {school.state} | {school.program} Program</p>
         </Collapse>
+
       </div>
     );
   }

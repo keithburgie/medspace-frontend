@@ -38,7 +38,7 @@ class SchoolsList extends Component {
     return (
       this.state.schools.map(school => {
         return (
-          <Fade in={this.state.fadeIn} key={school.id} data-key={school.id}>
+          <Fade in={this.state.fadeIn} key={school.id} data-key={school.id} style={{ width: '100%' }}>
             <School school={school} fadeSiblings={this.fadeSiblings}/>
           </Fade>
         )

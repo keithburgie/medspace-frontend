@@ -1,8 +1,47 @@
+$spacer: 1em;
+
 p {
-  margin: 0;
+  &:last-child {
+    margin-bottom: 0;
+  }
+
 }
 
 .small {
   font-size: smaller;
-  margin-bottom: 1em;
+  //margin-bottom: $spacer;
+  text-align: left;
+}
+
+.schoolWrapper {
+  border: 1px solid white;
+  width: 100%;
+  padding: $spacer;
+  border-radius: 8px;
+  margin-bottom: $spacer;
+}
+
+.collapseHeader {
+  position: relative;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.buttonWrapper {
+  margin: -$spacer 0;
+  padding: $spacer;
+  padding-right: 0;
+
+  > button {
+    width: 38px; //temporary
+  }
+}
+
+.containerStatus {
+  position: absolute;
+  top: -$spacer * 1.3;
+  right: -($spacer / 2);
+  display: none;
 }

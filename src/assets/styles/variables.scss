@@ -1,0 +1,5 @@
+$blue: #000063;
+
+@mixin background($color) {
+  background: $color;
+}

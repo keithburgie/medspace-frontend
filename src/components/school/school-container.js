@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Collapse, Button} from 'reactstrap';
 import styles from './school.module.scss';
 // import School from './school-view';
+import TodoList from '../todo-list'
 
 class SchoolContainer extends Component {
 
@@ -43,7 +44,7 @@ class SchoolContainer extends Component {
 
   render() {
 
-    const {school} = this.props
+    let {school, todos} = this.props
 
     return (
       <div className={styles.schoolWrapper}>
@@ -70,6 +71,9 @@ class SchoolContainer extends Component {
           onExiting={this.onExiting} onExited={this.onExited}>
 
           <p className={styles.small}>{school.city}, {school.state} | {school.program} Program</p>
+
+          <TodoList todos={todos} school={school} />
+
         </Collapse>
 
       </div>

@@ -1,7 +1,7 @@
 // component-name-container.js is your business logic and state management as handled before being sent to the stateless view Template.
 import React, {Component} from 'react';
 import {Fade} from 'reactstrap';
-import styles from './schools-list.module.scss';
+// import styles from './schools-list.module.scss';
 import School from '../school';
 
 class SchoolsList extends Component {
@@ -12,6 +12,7 @@ class SchoolsList extends Component {
       fadeIn: true,
       selectedIndex: null,
       schools: [],
+      todos: []
     }
     //this.toggle = this.toggle.bind(this);
 }
@@ -20,8 +21,10 @@ class SchoolsList extends Component {
     fetch('http://localhost:3000/api/v1/users/1')
     .then(r => r.json())
     .then(data => {
-      const userSchools = data.schools
-      this.setState({ schools: userSchools })
+      this.setState({ 
+        schools: data.schools,
+        todos: data.todos
+      })
     })
   }
 
@@ -35,11 +38,13 @@ class SchoolsList extends Component {
   }
 
   render() {
+
+    const {fadeIn, schools, todos} = this.state
     return (
-      this.state.schools.map(school => {
+      schools.map(school => {
         return (
-          <Fade in={this.state.fadeIn} key={school.id} data-key={school.id} style={{ width: '100%' }}>
-            <School school={school} fadeSiblings={this.fadeSiblings}/>
+          <Fade in={fadeIn} key={school.id} data-key={school.id} style={{ width: '100%' }}>
+            <School todos={todos} school={school} fadeSiblings={this.fadeSiblings}/>
           </Fade>
         )
       })

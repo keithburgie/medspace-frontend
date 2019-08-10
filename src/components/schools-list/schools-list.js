@@ -33,7 +33,9 @@ class SchoolsList extends Component {
       selectedIndex: e.target.dataset.id
     },() => {
       // figure out how to fade out items where data-key != selectedIndex
-      console.log(this.state.selectedIndex)
+      if (this.state.selectedIndex !== null) {
+        // do the thing
+      }
     })
   }
 
@@ -43,7 +45,12 @@ class SchoolsList extends Component {
     return (
       schools.map(school => {
         return (
-          <Fade in={fadeIn} key={school.id} data-key={school.id} style={{ width: '100%' }}>
+          <Fade 
+            in={fadeIn} 
+            key={school.id} 
+            data-key={school.id} 
+            style={{width: '100%'}}
+          >
             <School todos={todos} school={school} fadeSiblings={this.fadeSiblings}/>
           </Fade>
         )

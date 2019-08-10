@@ -16,8 +16,8 @@ class SchoolContainer extends Component {
     this.toggle = this.toggle.bind(this);
 
     this.state = { 
-      collapse: true,
-      status: 'Opened'
+      collapse: false,
+      status: 'Closed'
     };
   }
 
@@ -70,7 +70,9 @@ class SchoolContainer extends Component {
           onEntering={this.onEntering} onEntered={this.onEntered}
           onExiting={this.onExiting} onExited={this.onExited}>
 
-          <p className={styles.small}>{school.city}, {school.state} | {school.program} Program</p>
+          <p className={styles.small}>
+            {school.city}, {school.state} | {school.program} Program
+          </p>
 
           <TodoList todos={todos} school={school} />
 

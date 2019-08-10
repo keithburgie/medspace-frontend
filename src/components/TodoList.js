@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import styles from './todo-list.module.scss';
-import Todo from './todo';
+import styles from './Todo.module.scss';
+import Todo from './Todo.js';
 
 class TodoList extends Component {
 

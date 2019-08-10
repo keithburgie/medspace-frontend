@@ -1,6 +1,6 @@
 import React from 'react';
 import Moment from 'react-moment';
-import styles from './todo-list.module.scss';
+import styles from './Todo.module.scss';
 import {Button} from 'reactstrap';
 
 function Todo(props) {

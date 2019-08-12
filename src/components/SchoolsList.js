@@ -44,13 +44,9 @@ class SchoolsList extends Component {
     })
   }
 
-  componentDidUpdate() {
-    
-  }
-
   addSchool = (id) => {
     const {allSchools, schools} = this.state
-    const newSchool = allSchools[id]
+    const newSchool = allSchools[id-1]
     const defaultTodos = this.createDefaultTodos(id)
 
     this.setState({
@@ -70,8 +66,8 @@ class SchoolsList extends Component {
 
   createDefaultTodos = (schoolId) => {
     const tasks = [
-      "Request Recs", "Send Recs", "Send Essay", "Follow Up", 
-      "Send Secondary", "Interview", "Send Thank Yous"
+      "Request Recs YAY!", "Send Recs YAY!", "Send Essay YAY!", "Follow Up YAY!", 
+      "Send Secondary YAY!", "Interview YAY!", "Send Thank Yous"
     ]
 
     const defaultTodos = tasks.map(task => {
@@ -106,7 +102,19 @@ class SchoolsList extends Component {
   }
 
   renderSchool = school => {
-    return <School key={school.id} school={school} todos={this.state.todos} selectSchool={this.selectSchool} />
+    
+    let todos = this.state.todos.filter(todo => {
+      return todo.school_id === school.id
+    })
+    
+    return (
+      <School 
+        key={school.id} 
+        school={school} 
+        todos={todos} 
+        selectSchool={this.selectSchool} 
+      />
+    )
   }
 
   selectSchool = id => this.setState({ selectedSchool: id })

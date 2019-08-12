@@ -1,18 +1,25 @@
-// component-name-container.js is your business logic and state management as handled before being sent to the stateless view Template.
 import React, {Component, Fragment} from 'react';
 import {Button, Spinner, Fade} from 'reactstrap';
 import styles from './SchoolsList.module.scss'
 import School from './School.js';
 
+
+// -------------------------------------------------------------
+
+const api = `http://localhost:3000/api/v1`
+
 const userId = 1
-const userUrl = `http://localhost:3000/api/v1/users/${userId}`
-
 const schoolId = 2
+const schoolsLimit = `?limit=10`
 
-const schoolsLimit = 10
-const schoolsUrl = `http://localhost:3000/api/v1/schools?limit=${schoolsLimit}`
+const usersRoute = `${api}/users`
+const userRoute = `${usersRoute}/${userId}`
+const schoolsRoute = `${api}/schools${schoolsLimit}`
+// const schoolRoute = `${schoolsRoute}/${schoolId}`
+const todosRoute = `${api}/todos`
+const userSchoolsRoute = `${api}/user_schools`
 
-const todosUrl = `http://localhost:3000/api/v1/todos/`
+// -------------------------------------------------------------
 
 class SchoolsList extends Component {
 
@@ -29,7 +36,7 @@ class SchoolsList extends Component {
   }
 
   componentDidMount() {
-    fetch(schoolsUrl)
+    fetch(schoolsRoute)
     .then(resp => resp.json())
     .then(schools => {
       this.setState({ 
@@ -38,7 +45,9 @@ class SchoolsList extends Component {
       })
     })
 
-    fetch(userUrl).then(resp => resp.json()).then(data => {
+    fetch(userRoute)
+    .then(resp => resp.json())
+    .then(data => {
       this.setState({ 
         userSchools: data.schools,
         userTodos: data.todos
@@ -46,15 +55,30 @@ class SchoolsList extends Component {
     })
   }
 
-  addSchool = (id) => {
+  addSchool = (schoolId, userId) => {
     const {allSchools, userSchools} = this.state
-    const newSchool = allSchools[id-1]
-    this.createDefaultTodos(id)
+    const newSchool = allSchools[schoolId-1]
+    this.createDefaultTodos(schoolId)
 
     this.setState({
-      allSchools: allSchools.filter(school => school.id !== id),
+      allSchools: allSchools.filter(school => school.id !== schoolId),
       userSchools: [...userSchools, newSchool],
     })
+
+    fetch(userSchoolsRoute, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        user_school: {
+          school_id: schoolId,
+          user_id: userId
+        }
+      })
+    })
+    .then(resp => resp.json)
+    .then(data => console.log(data))
+    .catch(error => console.log(error))
+
   }
 
   createDefaultTodos = (schoolId) => {
@@ -78,7 +102,7 @@ class SchoolsList extends Component {
       due: new Date().toISOString()
     }
 
-    fetch(todosUrl, {
+    fetch(todosRoute, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(todo)
@@ -93,7 +117,6 @@ class SchoolsList extends Component {
   }
 
   renderSchool = school => {
-
     let userTodos = this.state.userTodos.filter(todo => {
       return todo.school_id === school.id
     })
@@ -128,7 +151,9 @@ class SchoolsList extends Component {
             {/* {selectedSchool === null ? userSchools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
             {userSchools.map(school => this.renderSchool(school))}
             <Fade in={this.state.fadeIn}>
-              <Button color="secondary" onClick={() => this.addSchool(schoolId)}>Add School</Button>
+              <Button color="secondary" 
+                onClick={() => this.addSchool(schoolId, userId)}>Add School
+              </Button>
             </Fade>
           </Fragment>
         }

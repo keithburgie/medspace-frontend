@@ -66,7 +66,7 @@ class School extends Component {
             {school.city}, {school.state} | {school.program} Program
           </p>
 
-          <TodoList todos={todos} school={school} />
+          <TodoList key={school.id} todos={todos} school={school} />
 
         </SchoolBody>
 

@@ -47,17 +47,11 @@ class SchoolsList extends Component {
   addSchool = (id) => {
     const {allSchools, schools} = this.state
     const newSchool = allSchools[id-1]
-    const defaultTodos = this.createDefaultTodos(id)
+    this.createDefaultTodos(id)
 
     this.setState({
-
-      // TODO: Make sure these are the best practice way to update state
-
       // Remove added school from array of all schools
       allSchools: allSchools.filter(school => school.id !== id),
-
-      // Add new todos to old todos
-      todos: [...this.state.todos.concat(defaultTodos)],
 
       // Add new school to user's school array
       schools: [...schools, newSchool],
@@ -66,43 +60,41 @@ class SchoolsList extends Component {
 
   createDefaultTodos = (schoolId) => {
     const tasks = [
-      "Request Recs YAY!", "Send Recs YAY!", "Send Essay YAY!", "Follow Up YAY!", 
-      "Send Secondary YAY!", "Interview YAY!", "Send Thank Yous"
+      "Request Recs", "Send Recs", "Send Essay", "Follow Up", 
+      "Send Secondary", "Interview", "Send Thank Yous"
     ]
 
-    const defaultTodos = tasks.map(task => {
+    tasks.map(task => {
       return this.addTodo(task, schoolId)
     })
-
-    return defaultTodos
   }
 
   addTodo = (task, schoolId) => {
-    const todo = {
+    let todo = {
       user_id: userId,
       school_id: schoolId,
       task: task,
       done: false,
       note: "",
-      due: Date.now()
+      due: new Date().toISOString()
     }
 
-    const configObj = {
+    fetch(todosUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(todo)
-    }
-
-    fetch(todosUrl, configObj)
-    .then(r => r.json())
-    // .then(data => console.log(todo))
+    })
+    .then(resp => resp.json())
+    .then(todo => {
+      this.setState({
+        todos: [...this.state.todos.concat(todo)]
+      })
+    })
     .catch(error => console.log(error))
-
-    return todo
   }
 
   renderSchool = school => {
-    
+
     let todos = this.state.todos.filter(todo => {
       return todo.school_id === school.id
     })
@@ -141,10 +133,6 @@ class SchoolsList extends Component {
             </Fade>
           </Fragment>
         }
-        
-        
-
-        
       </div>
     )
   }

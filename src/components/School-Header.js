@@ -8,10 +8,8 @@ function SchoolHeader(props) {
   return (
     <header className={styles.collapseHeader}>
       <div className={styles.buttonWrapper}>
-        <Button color="secondary" data-id={school.id}
-          onClick={(e) => toggle(e)}>
-          {collapse ? "-" : "+" }
-        </Button>
+        {/* Toggle school selection */}
+        <Button color="secondary" data-id={school.id} onClick={(e) => toggle(e)}> {collapse ? "-" : "+" } </Button>
       </div>
       <div>
         <p>{/* If name is really long, cut off at the comma */}

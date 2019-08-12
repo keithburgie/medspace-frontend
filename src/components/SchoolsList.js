@@ -22,39 +22,38 @@ class SchoolsList extends Component {
       loading: true,
       fadeIn: true,
       allSchools: [],
-      schools: [],
-      todos: [],
+      userSchools: [],
+      userTodos: [],
       selectedSchool: null
     }
   }
 
   componentDidMount() {
-    fetch(schoolsUrl).then(r => r.json()).then(schools => {
+    fetch(schoolsUrl)
+    .then(resp => resp.json())
+    .then(schools => {
       this.setState({ 
         loading: false,
         allSchools: schools
       })
     })
 
-    fetch(userUrl).then(r => r.json()).then(data => {
+    fetch(userUrl).then(resp => resp.json()).then(data => {
       this.setState({ 
-        schools: data.schools,
-        todos: data.todos
+        userSchools: data.schools,
+        userTodos: data.todos
       })
     })
   }
 
   addSchool = (id) => {
-    const {allSchools, schools} = this.state
+    const {allSchools, userSchools} = this.state
     const newSchool = allSchools[id-1]
     this.createDefaultTodos(id)
 
     this.setState({
-      // Remove added school from array of all schools
       allSchools: allSchools.filter(school => school.id !== id),
-
-      // Add new school to user's school array
-      schools: [...schools, newSchool],
+      userSchools: [...userSchools, newSchool],
     })
   }
 
@@ -87,7 +86,7 @@ class SchoolsList extends Component {
     .then(resp => resp.json())
     .then(todo => {
       this.setState({
-        todos: [...this.state.todos.concat(todo)]
+        userTodos: [...this.state.userTodos.concat(todo)]
       })
     })
     .catch(error => console.log(error))
@@ -95,7 +94,7 @@ class SchoolsList extends Component {
 
   renderSchool = school => {
 
-    let todos = this.state.todos.filter(todo => {
+    let userTodos = this.state.userTodos.filter(todo => {
       return todo.school_id === school.id
     })
     
@@ -103,7 +102,7 @@ class SchoolsList extends Component {
       <School 
         key={school.id} 
         school={school} 
-        todos={todos} 
+        todos={userTodos} 
         selectSchool={this.selectSchool} 
       />
     )
@@ -112,8 +111,8 @@ class SchoolsList extends Component {
   selectSchool = id => this.setState({ selectedSchool: id })
 
   render() {
-    const {schools, selectedSchool} = this.state
-    let school = schools.find(school => school.id === selectedSchool)
+    const {userSchools, selectedSchool} = this.state
+    let school = userSchools.find(school => school.id === selectedSchool)
 
     return (
       // Show call schools if no selected school : show only selection if made
@@ -126,8 +125,8 @@ class SchoolsList extends Component {
             </Fade>
           : 
           <Fragment>
-            {/* {selectedSchool === null ? schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
-            {schools.map(school => this.renderSchool(school))}
+            {/* {selectedSchool === null ? userSchools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
+            {userSchools.map(school => this.renderSchool(school))}
             <Fade in={this.state.fadeIn}>
               <Button color="secondary" onClick={() => this.addSchool(schoolId)}>Add School</Button>
             </Fade>

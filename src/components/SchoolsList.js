@@ -1,6 +1,6 @@
 // component-name-container.js is your business logic and state management as handled before being sent to the stateless view Template.
-import React, {Component} from 'react';
-import {Button} from 'reactstrap';
+import React, {Component, Fragment} from 'react';
+import {Button, Spinner, Fade} from 'reactstrap';
 import styles from './SchoolsList.module.scss'
 import School from './School.js';
 
@@ -8,13 +8,19 @@ const userId = 1
 const userUrl = `http://localhost:3000/api/v1/users/${userId}`
 
 const schoolId = 2
-const schoolsUrl = `http://localhost:3000/api/v1/schools`
+
+const schoolsLimit = 10
+const schoolsUrl = `http://localhost:3000/api/v1/schools?limit=${schoolsLimit}`
+
+const todosUrl = `http://localhost:3000/api/v1/todos/`
 
 class SchoolsList extends Component {
 
   constructor(props) {
     super(props);
     this.state = { 
+      loading: true,
+      fadeIn: true,
       allSchools: [],
       schools: [],
       todos: [],
@@ -23,30 +29,39 @@ class SchoolsList extends Component {
   }
 
   componentDidMount() {
+    fetch(schoolsUrl).then(r => r.json()).then(schools => {
+      this.setState({ 
+        loading: false,
+        allSchools: schools
+      })
+    })
+
     fetch(userUrl).then(r => r.json()).then(data => {
       this.setState({ 
         schools: data.schools,
         todos: data.todos
       })
     })
-
-    // Probably temporarily double fetch
-    // SLOOOWWWW. Don't click new school too soon!
-    fetch(schoolsUrl).then(r => r.json()).then(schools => {
-      this.setState({ 
-        allSchools: schools.slice(0,10)
-      })
-    })
   }
 
-  addNewSchool = (id) => {
-    const {allSchools, schools, todos} = this.state
+  componentDidUpdate() {
+    
+  }
+
+  addSchool = (id) => {
+    const {allSchools, schools} = this.state
     const newSchool = allSchools[id]
-    this.createDefaultTodos(id)
+    const defaultTodos = this.createDefaultTodos(id)
 
     this.setState({
+
+      // TODO: Make sure these are the best practice way to update state
+
       // Remove added school from array of all schools
       allSchools: allSchools.filter(school => school.id !== id),
+
+      // Add new todos to old todos
+      todos: [...this.state.todos.concat(defaultTodos)],
 
       // Add new school to user's school array
       schools: [...schools, newSchool],
@@ -59,20 +74,11 @@ class SchoolsList extends Component {
       "Send Secondary", "Interview", "Send Thank Yous"
     ]
 
-    const defaultTodos = tasks.map(task => this.addTodo(task, schoolId))
-
-    fetch(userUrl, {
-      method: 'PUT',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify(defaultTodos)
+    const defaultTodos = tasks.map(task => {
+      return this.addTodo(task, schoolId)
     })
-    .then(r => r.json())
-    .then(this.setState({
-        // TODO: Make sure this is adding the correct way
-        todos: [...this.state.todos.concat(defaultTodos)]
-      })
-    )
-    //.then(data => console.log(data))
+
+    return defaultTodos
   }
 
   addTodo = (task, schoolId) => {
@@ -84,23 +90,53 @@ class SchoolsList extends Component {
       note: "",
       due: Date.now()
     }
+
+    const configObj = {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(todo)
+    }
+
+    fetch(todosUrl, configObj)
+    .then(r => r.json())
+    // .then(data => console.log(todo))
+    .catch(error => console.log(error))
+
     return todo
   }
 
-  renderSchool = s => <School key={s.id} school={s} todos={this.state.todos} selectSchool={this.selectSchool} />
+  renderSchool = school => {
+    return <School key={school.id} school={school} todos={this.state.todos} selectSchool={this.selectSchool} />
+  }
+
   selectSchool = id => this.setState({ selectedSchool: id })
 
   render() {
-    const {schools, todos, selectedSchool} = this.state
+    const {schools, selectedSchool} = this.state
     let school = schools.find(school => school.id === selectedSchool)
 
     return (
       // Show call schools if no selected school : show only selection if made
       <div className={styles.container}>
-        {/* {selectedSchool === null ? schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
-        {schools.map(school => this.renderSchool(school))}
+        {
+          this.state.loading === true 
+          ? 
+            <Fade in={this.state.fadeIn}>
+              <Spinner color="info" />
+            </Fade>
+          : 
+          <Fragment>
+            {/* {selectedSchool === null ? schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
+            {schools.map(school => this.renderSchool(school))}
+            <Fade in={this.state.fadeIn}>
+              <Button color="secondary" onClick={() => this.addSchool(schoolId)}>Add School</Button>
+            </Fade>
+          </Fragment>
+        }
+        
+        
 
-        <Button color="secondary" onClick={() => this.addNewSchool(schoolId)}>Add School</Button>
+        
       </div>
     )
   }

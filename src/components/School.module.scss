@@ -13,12 +13,13 @@ p {
 }
 
 .schoolWrapper {
-  border: 1px solid white;
+  box-shadow: 1px 2px 3px 1px rgba(141, 137, 137, 0.5);
   width: 100%;
   padding: $spacer;
   border-radius: 8px;
   margin-bottom: $spacer;
   overflow: hidden;
+  margin: 0 $spacer $spacer;
 
   &:nth-child(2) {
     margin-top: $spacer;

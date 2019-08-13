@@ -5,8 +5,8 @@ import styles from './School.module.scss';
 import SchoolHeader from './SchoolHeader.js'
 import TodoList from './TodoList.js'
 
-const api = `http://localhost:3000/api/v1`
-const userSchoolsRoute = `${api}/user_schools`
+// const api = `http://localhost:3000/api/v1`
+// const userSchoolsRoute = `${api}/user_schools`
 
 class School extends Component {
 
@@ -40,8 +40,8 @@ class School extends Component {
   }
 
   remove(e) {
-   const schoolId = e.target.dataset.id
-    const userId = 1 
+    // const schoolId = e.target.dataset.id
+    // const userId = 1 
 
     alert("I don't work yet.")
 
@@ -51,13 +51,16 @@ class School extends Component {
   }
 
   toggle(e) {
+    
     this.setState({ 
       collapse: !this.state.collapse 
-    }, 
-    this.state.collapse === false 
-      ? this.props.selectSchool(parseInt(e.target.dataset.id)) 
-      : this.props.selectSchool(null)
+    }
+    // , 
+    // this.state.collapse === false 
+    //   ? this.props.selectSchool(parseInt(e.target.dataset.id)) 
+    //   : this.props.selectSchool(null)
     )
+    console.log("such toggle")
   }
 
   render() {

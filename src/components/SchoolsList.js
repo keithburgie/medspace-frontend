@@ -34,7 +34,6 @@ class SchoolsList extends Component {
       allSchools: [],
       userSchools: [],
       userTodos: [],
-      searchedSchool: null,
       selectedSchool: null
     }
   }
@@ -45,7 +44,7 @@ class SchoolsList extends Component {
     .then(schools => {
       this.setState({ 
         loading: false,
-        allSchools: schools
+        allSchools: schools // TODO: Filter out schools from userSchools 
       })
     })
 
@@ -59,17 +58,25 @@ class SchoolsList extends Component {
     })
   }
 
-  addSchool = (e, schoolId, userId) => {
+  addSchool = (e, userId) => {
     e.preventDefault()
 
     const form = e.target
+    // This is definitely not how Typeahead is supposed to work and I'm ashamed of myself.
     const selection = form.querySelector('.rbt-input-main').value
 
-    this.setState({
-      searchedSchool: selection
-    })
+    const {allSchools, userSchools} = this.state
+    const newSchool = allSchools.find(school => school.name === selection)
+    const schoolId = newSchool.id
 
-    const {allSchools, userSchools, searchedSchool} = this.state
+    // Don't let a user add a school twice
+    if (userSchools.find(school => (school.id === newSchool.id))) {
+      alert("School already added!")
+      form.querySelector('.rbt-input-main').value = ""
+      // Now figure out how to clear this form
+      return
+    }
+
     this.createDefaultTodos(schoolId)
 
     this.setState({
@@ -91,14 +98,13 @@ class SchoolsList extends Component {
     .then(data => console.log(data))
     .catch(error => console.log(error))
 
+    form.reset()
   }
 
   createDefaultTodos = (schoolId) => {
     const tasks = [
-      "Request Recs", "Send Recs", "Send Essay", "Follow Up", 
-      "Send Secondary", "Interview", "Send Thank Yous"
+      "Request Recs", "Send Recs", "Send Essay", "Follow Up", "Send Secondary", "Interview", "Send Thank Yous"
     ]
-
     tasks.map(task => {
       return this.addTodo(task, schoolId)
     })
@@ -146,9 +152,8 @@ class SchoolsList extends Component {
   selectSchool = id => this.setState({ selectedSchool: id })
 
   render() {
-    const {userSchools, selectedSchool} = this.state
-    let school = userSchools.find(school => school.id === selectedSchool)
-    let selected = []
+    const {userSchools, searchedSchool, selectedSchool} = this.state
+    //let school = userSchools.find(school => school.id === selectedSchool)
 
     return (
       // Show call schools if no selected school : show only selection if made
@@ -162,7 +167,7 @@ class SchoolsList extends Component {
           : 
           <Fragment>
             <Fade in={this.state.fadeIn} className={styles.searchInput}>
-              <Form onSubmit={(e) => this.addSchool(e, schoolId, userId)}>
+              <Form onSubmit={(e) => this.addSchool(e, userId)}>
                 <InputGroup>
                   <TypeaheadSearch options={this.state.allSchools}/>
                   <InputGroupAddon addonType="append">

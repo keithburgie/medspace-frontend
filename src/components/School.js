@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import {Collapse as SchoolBody} from 'reactstrap';
 import {Fade as SchoolWrapper } from 'reactstrap';
 import styles from './School.module.scss';
-import SchoolHeader from './School-Header.js'
+import SchoolHeader from './SchoolHeader.js'
 import TodoList from './TodoList.js'
+
+const api = `http://localhost:3000/api/v1`
+const userSchoolsRoute = `${api}/user_schools`
 
 class School extends Component {
 
@@ -36,8 +39,18 @@ class School extends Component {
     this.setState({ status: 'Closed' })
   }
 
+  remove(e) {
+   const schoolId = e.target.dataset.id
+    const userId = 1 
 
-  toggle(e) { 
+    alert("I don't work yet.")
+
+    // fetch(userSchoolsRoute, {
+    //   method: "DELETE",
+    // })
+  }
+
+  toggle(e) {
     this.setState({ 
       collapse: !this.state.collapse 
     }, 
@@ -54,7 +67,7 @@ class School extends Component {
     return (
       <SchoolWrapper data-key={school.id} in={fadeIn} className={styles.schoolWrapper}>
         
-        <SchoolHeader school={school} collapse={collapse} toggle={this.toggle}/>
+        <SchoolHeader school={school} collapse={collapse} toggle={this.toggle} remove={this.remove}/>
 
         <SchoolBody isOpen={collapse} 
           onEntering={this.onEntering} 

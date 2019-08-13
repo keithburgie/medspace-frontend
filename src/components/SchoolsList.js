@@ -128,7 +128,7 @@ class SchoolsList extends Component {
     .then(resp => resp.json())
     .then(todo => {
       this.setState({
-        userTodos: [...this.state.userTodos.concat(todo)]
+        userTodos: [...this.state.userTodos, todo]
       })
     })
     .catch(error => console.log(error))
@@ -138,6 +138,8 @@ class SchoolsList extends Component {
     let userTodos = this.state.userTodos.filter(todo => {
       return todo.school_id === school.id
     })
+
+    console.log(school)
     
     return (
       <School 
@@ -178,7 +180,7 @@ class SchoolsList extends Component {
             </Fade>
 
             {/* {selectedSchool === null ? userSchools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
-            {userSchools.map(school => this.renderSchool(school))}
+            {userSchools.map(userSchool => this.renderSchool(userSchool))}
           </Fragment>
         }
       </div>

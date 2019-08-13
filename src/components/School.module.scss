@@ -39,7 +39,10 @@ p {
   padding-right: 0;
 
   > button {
-    width: 38px; //temporary
+    //width: 38px; //temporary
+    &:first-child {
+      margin-right: $spacer / 2;
+    }
   }
 }
 

@@ -1,6 +1,8 @@
 import React, {Component, Fragment} from 'react';
-import {Button, Spinner, Fade} from 'reactstrap';
-import styles from './SchoolsList.module.scss'
+import {Form, FormGroup, Label, FormText, InputGroup, InputGroupAddon, Button, Spinner, Fade} from 'reactstrap';
+import TypeaheadSearch from './TypeaheadSearch.js'
+
+import styles from './SchoolsList.module.scss';
 import School from './School.js';
 
 
@@ -14,7 +16,8 @@ const schoolsLimit = `?limit=10`
 
 const usersRoute = `${api}/users`
 const userRoute = `${usersRoute}/${userId}`
-const schoolsRoute = `${api}/schools${schoolsLimit}`
+// const schoolsRoute = `${api}/schools${schoolsLimit}`
+const schoolsRoute = `${api}/schools`
 // const schoolRoute = `${schoolsRoute}/${schoolId}`
 const todosRoute = `${api}/todos`
 const userSchoolsRoute = `${api}/user_schools`
@@ -31,6 +34,7 @@ class SchoolsList extends Component {
       allSchools: [],
       userSchools: [],
       userTodos: [],
+      searchedSchool: null,
       selectedSchool: null
     }
   }
@@ -55,14 +59,22 @@ class SchoolsList extends Component {
     })
   }
 
-  addSchool = (schoolId, userId) => {
-    const {allSchools, userSchools} = this.state
-    const newSchool = allSchools[schoolId-1]
+  addSchool = (e, schoolId, userId) => {
+    e.preventDefault()
+
+    const form = e.target
+    const selection = form.querySelector('.rbt-input-main').value
+
+    this.setState({
+      searchedSchool: selection
+    })
+
+    const {allSchools, userSchools, searchedSchool} = this.state
     this.createDefaultTodos(schoolId)
 
     this.setState({
       allSchools: allSchools.filter(school => school.id !== schoolId),
-      userSchools: [...userSchools, newSchool],
+      userSchools: [...userSchools, allSchools[schoolId-1]],
     })
 
     fetch(userSchoolsRoute, {
@@ -136,6 +148,7 @@ class SchoolsList extends Component {
   render() {
     const {userSchools, selectedSchool} = this.state
     let school = userSchools.find(school => school.id === selectedSchool)
+    let selected = []
 
     return (
       // Show call schools if no selected school : show only selection if made
@@ -143,18 +156,24 @@ class SchoolsList extends Component {
         {
           this.state.loading === true 
           ? 
-            <Fade in={this.state.fadeIn}>
-              <Spinner color="info" />
-            </Fade>
+          <Fade in={this.state.fadeIn}>
+            <Spinner color="info" />
+          </Fade>
           : 
           <Fragment>
+            <Fade in={this.state.fadeIn} className={styles.searchInput}>
+              <Form onSubmit={(e) => this.addSchool(e, schoolId, userId)}>
+                <InputGroup>
+                  <TypeaheadSearch options={this.state.allSchools}/>
+                  <InputGroupAddon addonType="append">
+                  <Button type="submit" color="secondary">Add School</Button>
+                  </InputGroupAddon>
+                </InputGroup>
+              </Form>
+            </Fade>
+
             {/* {selectedSchool === null ? userSchools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
             {userSchools.map(school => this.renderSchool(school))}
-            <Fade in={this.state.fadeIn}>
-              <Button color="secondary" 
-                onClick={() => this.addSchool(schoolId, userId)}>Add School
-              </Button>
-            </Fade>
           </Fragment>
         }
       </div>

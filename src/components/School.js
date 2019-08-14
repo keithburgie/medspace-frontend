@@ -39,17 +39,6 @@ class School extends Component {
     this.setState({ status: 'Closed' })
   }
 
-  remove(e) {
-    // const schoolId = e.target.dataset.id
-    // const userId = 1 
-
-    alert("I don't work yet.")
-
-    // fetch(userSchoolsRoute, {
-    //   method: "DELETE",
-    // })
-  }
-
   toggle(e) {
     
     this.setState({ 
@@ -64,13 +53,13 @@ class School extends Component {
   }
 
   render() {
-    let {school, todos} = this.props
+    let {school, todos, deleteSchool} = this.props
     let {fadeIn, collapse} = this.state
 
     return (
       <SchoolWrapper data-key={school.id} in={fadeIn} className={styles.schoolWrapper}>
         
-        <SchoolHeader school={school} collapse={collapse} toggle={this.toggle} remove={this.remove}/>
+        <SchoolHeader school={school} collapse={collapse} toggle={this.toggle} deleteSchool={deleteSchool}/>
 
         <SchoolBody isOpen={collapse} 
           onEntering={this.onEntering} 

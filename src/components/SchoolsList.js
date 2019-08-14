@@ -11,18 +11,19 @@ import School from './School.js';
 // -------------------------------------------------------------
 
 const api = `http://localhost:3000/api/v1`
+const schoolsUrl = `${api}/schools`
+const todosUrl = `${api}/todos`
+const userSchoolsUrl = `${api}/user_schools`
 
-const loggedInUser = 1
+const user_id = 1
 // const schoolId = 2
 // const schoolsLimit = `?limit=10`
+// const schoolsUrl = `${api}/schools${schoolsLimit}`
+// const schoolUrl = `${schoolsUrl}/${schoolId}`
+// const usersUrl = `${api}/users`
+// const userUrl = `${usersUrl}/${user_id}`
 
-// const usersRoute = `${api}/users`
-// const userRoute = `${usersRoute}/${loggedInUser}`
-// const schoolsRoute = `${api}/schools${schoolsLimit}`
-const schoolsRoute = `${api}/schools`
-// const schoolRoute = `${schoolsRoute}/${schoolId}`
-const todosRoute = `${api}/todos`
-const userSchoolsRoute = `${api}/user_schools`
+
 
 // -------------------------------------------------------------
 
@@ -32,9 +33,9 @@ class SchoolsList extends Component {
   //   super(props);
     state = { 
       loading: true,
-      allSchools: [],
-      userSchools: [],
-      userTodos: [],
+      all_schools: [],
+      user_schools: [],
+      user_todos: [],
       fadeIn: true,
       selectedSchool: null,
       inputValue: '',
@@ -43,92 +44,97 @@ class SchoolsList extends Component {
 
   componentDidMount() {
     // Fetch all schools from API
-    fetch(schoolsRoute)
+    fetch(schoolsUrl)
     .then(resp => resp.json())
-    .then(schools => {
+    .then(all_schools => {
       // Move user's from "all" array to own
-      let userSchools = []
-      schools.filter(school => {
-        if (school.users.some(user => user.id === loggedInUser)) {
-          userSchools.push(school)
-          schools.splice(school, 1)
+      let user_schools = []
+      all_schools.filter(school => {
+        if (school.users.some(user => user.id === user_id)) {
+          user_schools.push(school)
+          all_schools.splice(school, 1)
         }
       })
 
       // Create array of all todos from user's schools
-      let userTodos = userSchools.map(todo => todo.todos).flat()
+      let user_todos = user_schools.map(todo => todo.todos).flat()
 
       // Push data into state
       this.setState({
         loading: false,
-        allSchools: [...this.state.allSchools, ...schools],
-        userSchools: [...this.state.userSchools, ...userSchools],
-        userTodos: [...this.state.userTodos, ...userTodos]
+        all_schools: [...this.state.all_schools, ...all_schools],
+        user_schools: [...this.state.user_schools, ...user_schools],
+        user_todos: [...this.state.user_todos, ...user_todos]
       })
     })
   }
 
 
-  handleAddSchool = (loggedInUser) => {
-    let new_school_id = this.state.inputValue
+  handleAddSchool = (user_id) => {
+    console.log("Button clicked")
+    let new_school_id = this.state.inputValue // the id number
     this.createDefaultTodos(new_school_id)
 
-    fetch(userSchoolsRoute, {
+    fetch(userSchoolsUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
         user_school: {
           school_id: new_school_id,
-          user_id: loggedInUser
+          user_id: user_id
         }
       })
     })
     .then(resp => resp.json())
     .then(userSchool => {
-      console.log("added userSchool ", userSchool)
-      // Find school in allSchools array
-      let new_school = this.state.allSchools.filter(school => {
-        return school.id === new_school_id
-      })
-      
-      // Add found school to userSchools array
-      this.setState({
-        userSchools: [...this.state.userSchools, ...new_school],
-      })
-    })
-    .catch(error => console.log(error))
+
+      let {all_schools, user_schools} = this.state
+
+      // Find school in all_schools array
+      let new_school = all_schools.find(school => school.id === userSchool.school_id)
+
+      // Add found school to user_schools array // TODO: REMOVE SCHOOL FROM ALL_SCHOOLS
+      this.setState({ 
+        user_schools: [...user_schools, new_school] 
+      },() => console.log("added userSchool ", userSchool))
+    }).catch(error => console.log(error))
   }
 
 
   renderSchool = school => {
-    let userTodos = this.state.userTodos.filter(todo => {
+    let user_todos = this.state.user_todos.filter(todo => {
       return todo.school_id === school.id
     })
 
-    let userSchool = school.user_schools.filter(us => us.user_id === loggedInUser)
+    // let find_user_school = school.user_schools.find(us => us.user_id === user_id)
+    console.log('school', school)
 
-    console.log("renderSchool() : ", school.id)
-    
+    let user_school = school.user_schools[0].id
+    console.log("user_school = ", user_school)
+    console.log("renderSchool() : ", school.name, school.user_schools[0].id)
+
     return (
       <School 
         key={school.id}
-        school={school} 
-        todos={userTodos} 
+        school={school}
+        userSchool={user_school}
+        todos={user_todos} 
         deleteSchool={this.deleteSchool}
         // selectSchool={this.selectSchool} 
       />
     )
   }
 
-  deleteSchool = school => {
-    const userSchoolId = school.target.dataset.id
-
-    fetch(`${userSchoolsRoute}/${userSchoolId}`, {
-      method: 'DELETE',})
-    .then(resp => resp.json)
-    .then(data => console.log(data))
+  deleteSchool = (e) => {
+    let id = parseInt(e.target.dataset.id)
+    fetch(`${userSchoolsUrl}/${id}`, {method: 'DELETE'})
+    .then(resp => resp.json())
+    .then(this.setState({
+      user_schools: [...this.state.user_schools.filter(school => {
+        return school.user_schools[0].id !== id
+      })]
+    }))
     .catch(error => console.log(error))
-
   }
 
   createDefaultTodos = (schoolId) => {
@@ -141,7 +147,7 @@ class SchoolsList extends Component {
 
   addTodo = (task, schoolId) => {
     let todo = {
-      user_id: loggedInUser,
+      user_id: user_id,
       school_id: schoolId,
       task: task,
       done: false,
@@ -149,7 +155,7 @@ class SchoolsList extends Component {
       due: new Date().toISOString()
     }
 
-    fetch(todosRoute, {
+    fetch(todosUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(todo)
@@ -157,7 +163,7 @@ class SchoolsList extends Component {
     .then(resp => resp.json)
     .then(todo => {
       this.setState({
-        userTodos: [...this.state.userTodos, todo]
+        user_todos: [...this.state.user_todos, todo]
       })
     })
     .catch(error => console.log(error))
@@ -174,9 +180,9 @@ class SchoolsList extends Component {
   }
 
   render() {
-    // let {userSchools, searchedSchool, selectedSchool, allSchools} = this.state
-    //let school = userSchools.find(school => school.id === selectedSchool)
-    let {userSchools, allSchools} = this.state
+    // let {user_schools, searchedSchool, selectedSchool, all_schools} = this.state
+    //let school = user_schools.find(school => school.id === selectedSchool)
+    let {user_schools, all_schools} = this.state
 
     return (
       // Show call schools if no selected school : show only selection if made
@@ -193,17 +199,17 @@ class SchoolsList extends Component {
               <InputGroup>
                 <Select 
                   className={styles.searchInput} 
-                  options={allSchools.map(school => {
+                  options={all_schools.map(school => {
                     return Object.assign({value: school.id, label: school.name})
                   })} 
                   onChange={this.handleSelectChange.bind(this)} 
                 />
-                <Button onClick={() => this.handleAddSchool(loggedInUser)}>Add School</Button>
+                <Button onClick={() => this.handleAddSchool(user_id)}>Add School</Button>
               </InputGroup>
             </Fade>
 
-            {/* {selectedSchool === null ? userSchools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
-            {userSchools.map(userSchool => this.renderSchool(userSchool))}
+            {/* {selectedSchool === null ? user_schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
+            {this.state.user_schools.map(school => this.renderSchool(school))}
           </Fragment>
         }
       </div>

@@ -53,13 +53,19 @@ class School extends Component {
   }
 
   render() {
-    let {school, todos, deleteSchool} = this.props
+    let {userSchool, school, todos, deleteSchool} = this.props
     let {fadeIn, collapse} = this.state
 
     return (
-      <SchoolWrapper data-key={school.id} in={fadeIn} className={styles.schoolWrapper}>
+      <SchoolWrapper data-id={userSchool} in={fadeIn} className={styles.schoolWrapper}>
         
-        <SchoolHeader school={school} collapse={collapse} toggle={this.toggle} deleteSchool={deleteSchool}/>
+        <SchoolHeader 
+          school={school} 
+          userSchool={userSchool} 
+          collapse={collapse} 
+          toggle={this.toggle} 
+          deleteSchool={deleteSchool}
+        />
 
         <SchoolBody isOpen={collapse} 
           onEntering={this.onEntering} 

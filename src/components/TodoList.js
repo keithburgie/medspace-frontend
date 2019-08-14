@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styles from './Todo.module.scss';
 import Todo from './Todo.js';
 
-class TodoList extends Component {
+class TodoList extends PureComponent {
 
   render() {
 

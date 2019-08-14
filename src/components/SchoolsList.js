@@ -93,9 +93,11 @@ class SchoolsList extends Component {
       // Find school in all_schools array
       let new_school = all_schools.find(school => school.id === userSchool.school_id)
 
-      // Add found school to user_schools array // TODO: REMOVE SCHOOL FROM ALL_SCHOOLS
+      // Add found school to user_schools array 
+      // TODO: REMOVE SCHOOL FROM ALL_SCHOOLS
       this.setState({ 
-        user_schools: [...user_schools, new_school] 
+        user_schools: [...user_schools, new_school],
+        all_schools: [...all_schools.filter(school => school !== new_school) ]
       },() => console.log("added userSchool ", userSchool))
     }).catch(error => console.log(error))
   }
@@ -106,33 +108,34 @@ class SchoolsList extends Component {
       return todo.school_id === school.id
     })
 
-    // let find_user_school = school.user_schools.find(us => us.user_id === user_id)
-    console.log('school', school)
+    // TODO: FIGURE OUT HOW TO MAKE THIS NUMBER WORK SO YOU CAN DELETE
+    // let user_school = school.user_schools[0].id
 
-    let user_school = school.user_schools[0].id
-    console.log("user_school = ", user_school)
-    console.log("renderSchool() : ", school.name, school.user_schools[0].id)
+    // console.log("renderSchool() : ", school.name)
 
     return (
       <School 
         key={school.id}
         school={school}
-        userSchool={user_school}
         todos={user_todos} 
-        deleteSchool={this.deleteSchool}
+        deleteSchool={() => this.deleteSchool(school)}
         // selectSchool={this.selectSchool} 
       />
     )
   }
 
-  deleteSchool = (e) => {
-    let id = parseInt(e.target.dataset.id)
+  // TODO: Delete doesn't work if school was just added
+  //    because school.user_schools[0].id is empty
+  // TODO: Assign ownership of todos to UserSchool and
+  //    dependent destroy them when school is deleted
+  deleteSchool = (school) => {
+    let id = school.user_schools[0].id
     fetch(`${userSchoolsUrl}/${id}`, {method: 'DELETE'})
     .then(resp => resp.json())
     .then(this.setState({
-      user_schools: [...this.state.user_schools.filter(school => {
-        return school.user_schools[0].id !== id
-      })]
+      user_schools: [...this.state.user_schools.filter(school =>  school.user_schools[0].id !== id)],
+      all_schools: [...this.state.all_schools, school],
+      all_todos: [...this.state.user_todos.filter(todo => todo.school_id !== school.id)]
     }))
     .catch(error => console.log(error))
   }

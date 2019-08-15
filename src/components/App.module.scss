@@ -1,6 +1,32 @@
 // @import "./variables.scss";
+$bringingSexyBlack: #282c34;
 
 .App {
+
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  padding: 3.875em 1em 2em;
+  background: $bringingSexyBlack;
+  background: rgb(60,60,60);
+  background: linear-gradient(90deg, rgba(60,60,60,1) 0%, rgba(117,117,117,1) 100%);
+
+  .leftCol {
+    width: 21%;
+    color: white;
+  }
+
+  .rightCol {
+    flex: 1;
+    padding-top: 1em;
+    background: white;
+    border-radius: 8px;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    height: 100%;
+    overflow: hidden;
+  }
 
   &Header {
     background-color: #282c34;

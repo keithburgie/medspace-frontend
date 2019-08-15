@@ -118,8 +118,8 @@ class SchoolsList extends Component {
         key={school.id}
         school={school}
         todos={user_todos} 
-        deleteSchool={() => this.deleteSchool(school)}
-        // selectSchool={this.selectSchool} 
+        deleteSchool={this.deleteSchool}
+        selectSchool={this.selectSchool} 
       />
     )
   }
@@ -173,7 +173,27 @@ class SchoolsList extends Component {
   }
 
   selectSchool = id => {
-    this.setState({ selectedSchool: id })
+    if (id !== null) {
+      let selection = document.querySelector(`[data-id='${id}']`)
+      selection.classList.add('selected')
+      let schools = document.getElementById('school-list').querySelectorAll('.fade.show:not(.selected)')
+      this.setState({ selectedSchool: id }, () => {
+        for(let i = 0; i < schools.length; i++) {schools[i].setAttribute(
+          "style", "opacity: 0; height: 0; padding: 0; margin: 0; transition: all .2s linear;"
+        )}
+      })
+    }
+    else {
+      let selection = document.querySelector('.selected')
+      selection.classList.remove('selected')
+      let schools = document.getElementById('school-list').querySelectorAll('.fade.show:not(.selected)')
+      this.setState({ selectedSchool: null }, () => {
+        for(let i = 0; i < schools.length; i++) {schools[i].setAttribute(
+          "style", "opacity: 100; height: auto; padding: 1em; margin: 0 1em 1em; transition: all .2s linear;"
+        ) }
+      })
+    }
+    
   }
 
   handleSelectChange = (obj) => {
@@ -182,14 +202,24 @@ class SchoolsList extends Component {
     })
   }
 
+  fadeIn = (el) => {
+    el.classList.add('fadeIn');
+    el.classList.remove('fadeOut');  
+  }
+  
+  fadeOut = (el) => {
+    el.classList.add('fadeOut');
+    el.classList.remove('fadeIn');
+  }
+
   render() {
     // let {user_schools, searchedSchool, selectedSchool, all_schools} = this.state
-    //let school = user_schools.find(school => school.id === selectedSchool)
-    let {user_schools, all_schools} = this.state
+    let {user_schools, all_schools, selectedSchool} = this.state
+    let school = user_schools.find(school => school.id === selectedSchool)
 
     return (
       // Show call schools if no selected school : show only selection if made
-      <div className={styles.container}>
+      <div id="school-list" className={styles.container}>
         {
           this.state.loading === true 
           ? 
@@ -198,8 +228,8 @@ class SchoolsList extends Component {
           </Fade>
           : 
           <Fragment>
-            <Fade in={this.state.fadeIn}>
-              <InputGroup>
+            {/* <Fade in={this.state.fadeIn}> */}
+              <InputGroup className={styles.selectInput}>
                 <Select 
                   className={styles.searchInput} 
                   options={all_schools.map(school => {
@@ -207,9 +237,9 @@ class SchoolsList extends Component {
                   })} 
                   onChange={this.handleSelectChange.bind(this)} 
                 />
-                <Button onClick={() => this.handleAddSchool(user_id)}>Add School</Button>
+                <Button color="success" onClick={() => this.handleAddSchool(user_id)}>Add School</Button>
               </InputGroup>
-            </Fade>
+            {/* </Fade> */}
 
             {/* {selectedSchool === null ? user_schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
             {this.state.user_schools.map(school => this.renderSchool(school))}

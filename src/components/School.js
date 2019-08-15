@@ -26,29 +26,25 @@ class School extends Component {
     };
   }
 
-  onEntering() { 
-    this.setState({ status: 'Opening...' })
+  onEntering(e) { 
+    console.log("entering")
+    this.setState({ status: 'Opening...' }, this.props.selectSchool(parseInt(e.firstElementChild.dataset.id)))
   }
   onEntered() { 
     this.setState({ status: 'Opened' })
   }
   onExiting() { 
-    this.setState({ status: 'Closing...' })
+    console.log("closing")
+    this.setState({ status: 'Closing...' }, this.props.selectSchool(null))
   }
   onExited() { 
     this.setState({ status: 'Closed' })
   }
 
-  toggle(e) {
-    
+  toggle() {
     this.setState({ 
       collapse: !this.state.collapse 
-    }
-    // , 
-    // this.state.collapse === false 
-    //   ? this.props.selectSchool(parseInt(e.target.dataset.id)) 
-    //   : this.props.selectSchool(null)
-    )
+    })
     console.log("such toggle")
   }
 
@@ -72,7 +68,7 @@ class School extends Component {
           onExiting={this.onExiting} 
           onExited={this.onExited}>
 
-          <p className={styles.small}>
+          <p data-id={school.id} className={styles.small}>
             {school.city}, {school.state} | {school.program} Program
           </p>
 

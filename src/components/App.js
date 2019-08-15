@@ -9,9 +9,15 @@ class App extends React.Component {
   render() {
     return (
       <div className={styles.App}>
-        <header className={styles.AppHeader}>
+        {/* <header className={styles.AppHeader}>
+          
+        </header> */}
+        <div className={styles.leftCol}>
+          <p>I'm a column too.  </p>
+        </div>
+        <div className={styles.rightCol}>
           <SchoolsList />
-        </header>
+        </div>
       </div>
     );
   }

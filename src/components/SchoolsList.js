@@ -62,34 +62,37 @@ class SchoolsList extends Component {
   }
 
   addSchool = (user_id) => {
-    const new_school_id = this.state.inputValue
-
+    const user_school = {
+      school_id: this.state.inputValue,
+      user_id: user_id
+    }
     // Post the new UserSchool
     fetch(userSchoolsUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        school_id: new_school_id,
-        user_id: user_id
-      })
+      body: JSON.stringify(user_school)
     })
-    // Get the ID of the new UserSchool
     .then(r => r.json()).then(new_user_school => {
-      
-      // Create new Todos with that ID
+      // Create new Todos for new UserSchool
       this.createDefaultTodos(new_user_school.id)
-
-      // TODO: FIGURE OUT HOW TO FETCH *AFTER* ALL TODOS HAVE POSTED
-      fetch(`${userSchoolsUrl}/${new_user_school.id}`)
-      .then(r => r.json()
-      .then(user_school => {
-        console.log("user_school = ", user_school)
-        this.setState({
-          user_schools: [...this.state.user_schools, new_user_school]
-        })
-      })).catch(error => console.log(error))
     })
+    .catch(error => console.log(error))
   }
+
+  setSchool = (user_school) => {
+    // TODO: FIGURE OUT HOW TO FETCH *AFTER* ALL TODOS HAVE POSTED
+    fetch(`${userSchoolsUrl}/${user_school}`)
+    .then(r => r.json()
+    .then(user_school => {
+      this.setState({
+        user_schools: [...this.state.user_schools, user_school]
+      })
+    }))
+    .catch(error => console.log(error))
+  }
+
+  
+
 
   deleteSchool = (e) => {
     const id = parseInt(e.target.dataset.id)
@@ -107,6 +110,7 @@ class SchoolsList extends Component {
       "Request Recs", "Send Recs", "Send Essay", "Follow Up", 
       "Send Secondary", "Interview", "Send Thank Yous"
     ]
+
     tasks.map(task => this.addTodo(task, user_school_id))
   }
 
@@ -129,6 +133,17 @@ class SchoolsList extends Component {
     .catch(error => console.log(error))
   }
 
+  deleteTodo = (event) => {
+    const delButton = event.target
+    const todo_id = delButton.dataset.id
+    fetch(`${todosUrl}/${todo_id}`, {method: 'DELETE'})
+    .then(r => r.json())
+    .then(data => {
+      // TODO: DO THIS VIA STATE INSTEAD
+      delButton.closest('div').remove()
+    })
+  }
+
   renderSchool = user_school => {
     const {all_schools} = this.state
     const school = all_schools.find(school => school.id === user_school.school_id)
@@ -143,6 +158,7 @@ class SchoolsList extends Component {
         school={school}
         todos={todos} 
         deleteSchool={this.deleteSchool}
+        deleteTodo={this.deleteTodo}
         selectSchool={this.selectSchool} 
       />
     )

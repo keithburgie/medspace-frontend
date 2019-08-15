@@ -1,8 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import styles from './Todo.module.scss';
 import Todo from './Todo.js';
 
-class TodoList extends PureComponent {
+class TodoList extends Component {
 
   render() {
 
@@ -13,9 +13,10 @@ class TodoList extends PureComponent {
           <span>Status:</span> 
           <span>Notes:</span> 
           <span>Due Date</span>
+          <span>Delete</span>
         </div>
         {this.props.todos.map(todo => {
-          return <Todo key={todo.id} todo={todo} />
+          return <Todo key={todo.id} todo={todo} deleteTodo={this.props.deleteTodo} />
         })}
       </div>
     )

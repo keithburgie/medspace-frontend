@@ -22,8 +22,17 @@
     line-height: 1.8;
 
     &:last-child {
-      flex: 2;
-      text-align: right;
+      flex: .25;
+      text-align: center;
     }
   }
+}
+
+.deleteTodo button {
+  border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    line-height: 1;
+    border: 1px solid;
+    margin-right: .5em;
 }

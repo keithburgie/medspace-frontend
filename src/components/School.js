@@ -21,8 +21,8 @@ class School extends Component {
 
     this.state = { 
       fadeIn: true,
-      collapse: false,
-      status: 'Closed'
+      collapse: true,
+      status: 'Opened'
     };
   }
 
@@ -49,7 +49,7 @@ class School extends Component {
   }
 
   render() {
-    let {school, todos, deleteSchool, user_school} = this.props
+    let {school, todos, deleteSchool, deleteTodo, user_school} = this.props
     let {fadeIn, collapse} = this.state
 
     return (
@@ -73,7 +73,7 @@ class School extends Component {
             {school.city}, {school.state} | {school.program} Program
           </p>
 
-          <TodoList key={school.id} todos={todos} school={school} />
+          <TodoList key={school.id} school={school} todos={todos} deleteTodo={deleteTodo} />
 
         </SchoolBody>
 

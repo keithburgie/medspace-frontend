@@ -15,13 +15,13 @@ const schoolsUrl = `${api}/schools`
 const todosUrl = `${api}/todos`
 const userSchoolsUrl = `${api}/user_schools`
 
-const user_id = 1
+const user_id = 2
 // const schoolId = 2
 // const schoolsLimit = `?limit=10`
 // const schoolsUrl = `${api}/schools${schoolsLimit}`
 // const schoolUrl = `${schoolsUrl}/${schoolId}`
-// const usersUrl = `${api}/users`
-// const userUrl = `${usersUrl}/${user_id}`
+const usersUrl = `${api}/users`
+const userUrl = `${usersUrl}/${user_id}`
 
 
 
@@ -33,9 +33,9 @@ class SchoolsList extends Component {
   //   super(props);
     state = { 
       loading: true,
-      all_schools: [],
       user_schools: [],
-      user_todos: [],
+      all_schools: [],
+      //user_todos: [],
       fadeIn: true,
       selectedSchool: null,
       inputValue: '',
@@ -43,81 +43,96 @@ class SchoolsList extends Component {
   // }
 
   componentDidMount() {
-    // Fetch all schools from API
-    fetch(schoolsUrl)
-    .then(resp => resp.json())
-    .then(all_schools => {
-      // Move user's from "all" array to own
-      let user_schools = []
-      all_schools.filter(school => {
-        if (school.users.some(user => user.id === user_id)) {
-          user_schools.push(school)
-          all_schools.splice(school, 1)
-        }
+
+    Promise.all([
+      fetch(schoolsUrl), 
+      fetch(userSchoolsUrl)
+    ])
+    .then(([all_schools_data, user_schools_data]) => {
+      return Promise.all([all_schools_data.json(), user_schools_data.json()])
+    })
+    .then(([all_schools_data, user_schools_data]) => {
+
+      const user_schools = user_schools_data.filter(user_school => {
+        return user_school.user_id === user_id
       })
 
-      // Create array of all todos from user's schools
-      let user_todos = user_schools.map(todo => todo.todos).flat()
+      // const user_schools = all_schools_data.filter(school => {
+      //   return school.user_schools.find(us => us.user_id === user_id)
+      // })
 
-      // Push data into state
+      // const all_schools = all_schools_data.filter(school => {
+      //   return !school.user_schools.find(us => us.user_id === user_id)
+      // })
+
       this.setState({
-        loading: false,
-        all_schools: [...this.state.all_schools, ...all_schools],
         user_schools: [...this.state.user_schools, ...user_schools],
-        user_todos: [...this.state.user_todos, ...user_todos]
+        all_schools: [...this.state.all_schools, ...all_schools_data]
       })
     })
+
+
+ 
+
+      // Create array of all todos from user's schools
+      // let user_todos = user_schools.map(todo => todo.todos).flat()
+
+      // // Push data into state
+      // this.setState({
+      //   loading: false,
+      //   all_schools: [...this.state.all_schools, ...all_schools],
+      //   user_schools: [...this.state.user_schools, ...user_schools],
+      //   user_todos: [...this.state.user_todos, ...user_todos]
+      // })
   }
 
 
   handleAddSchool = (user_id) => {
-    console.log("Button clicked")
-    let new_school_id = this.state.inputValue // the id number
-    this.createDefaultTodos(new_school_id)
+    const {user_schools, inputValue} = this.state
+    console.log("Add a school!")
+    
+    let new_school_id = inputValue // the id number
+
+    //this.createDefaultTodos(new_school_id)
+
+    const payload = {
+      user_school: {
+        school_id: new_school_id,
+        user_id: user_id
+      }
+    }
 
     fetch(userSchoolsUrl, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        user_school: {
-          school_id: new_school_id,
-          user_id: user_id
-        }
-      })
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
     })
     .then(resp => resp.json())
-    .then(userSchool => {
-
-      let {all_schools, user_schools} = this.state
-
-      // Find school in all_schools array
-      let new_school = all_schools.find(school => school.id === userSchool.school_id)
-
-      // Add found school to user_schools array 
-      // TODO: REMOVE SCHOOL FROM ALL_SCHOOLS
+    .then(new_user_school => {
+      console.log("new_user_school = ", new_user_school.school_id)
+      console.log("inputValue = ", inputValue)
       this.setState({ 
-        user_schools: [...user_schools, new_school],
-        all_schools: [...all_schools.filter(school => school !== new_school) ]
-      },() => console.log("added userSchool ", userSchool))
+        user_schools: [...user_schools, new_user_school],
+      })
     }).catch(error => console.log(error))
   }
 
 
-  renderSchool = school => {
-    let user_todos = this.state.user_todos.filter(todo => {
-      return todo.school_id === school.id
-    })
+  renderSchool = user_school => {
+    const {all_schools} = this.state
+    const school = all_schools.find(school => school.id === user_school.school_id)
+    const todos = user_school.todos
 
-    // TODO: FIGURE OUT HOW TO MAKE THIS NUMBER WORK SO YOU CAN DELETE
-    // let user_school = school.user_schools[0].id
-
-    // console.log("renderSchool() : ", school.name)
+    console.log("renderSchool() => ", school.name, " #", school.id)
 
     return (
       <School 
         key={school.id}
+        user_school={user_school}
         school={school}
-        todos={user_todos} 
+        todos={todos} 
         deleteSchool={this.deleteSchool}
         selectSchool={this.selectSchool} 
       />
@@ -128,17 +143,16 @@ class SchoolsList extends Component {
   //    because school.user_schools[0].id is empty
   // TODO: Assign ownership of todos to UserSchool and
   //    dependent destroy them when school is deleted
-  deleteSchool = (school) => {
-    let id = school.user_schools[0].id
+  deleteSchool = (e) => {
+    const id = parseInt(e.target.dataset.id)
     fetch(`${userSchoolsUrl}/${id}`, {method: 'DELETE'})
     .then(resp => resp.json())
     .then(this.setState({
-      user_schools: [...this.state.user_schools.filter(school =>  school.user_schools[0].id !== id)],
-      all_schools: [...this.state.all_schools, school],
-      all_todos: [...this.state.user_todos.filter(todo => todo.school_id !== school.id)]
+      user_schools: [...this.state.user_schools.filter(user_school => user_school.id !== id)]
     }))
     .catch(error => console.log(error))
   }
+
 
   createDefaultTodos = (schoolId) => {
     const tasks = [
@@ -173,26 +187,26 @@ class SchoolsList extends Component {
   }
 
   selectSchool = id => {
-    if (id !== null) {
-      let selection = document.querySelector(`[data-id='${id}']`)
-      selection.classList.add('selected')
-      let schools = document.getElementById('school-list').querySelectorAll('.fade.show:not(.selected)')
-      this.setState({ selectedSchool: id }, () => {
-        for(let i = 0; i < schools.length; i++) {schools[i].setAttribute(
-          "style", "opacity: 0; height: 0; padding: 0; margin: 0; transition: all .2s linear;"
-        )}
-      })
-    }
-    else {
-      let selection = document.querySelector('.selected')
-      selection.classList.remove('selected')
-      let schools = document.getElementById('school-list').querySelectorAll('.fade.show:not(.selected)')
-      this.setState({ selectedSchool: null }, () => {
-        for(let i = 0; i < schools.length; i++) {schools[i].setAttribute(
-          "style", "opacity: 100; height: auto; padding: 1em; margin: 0 1em 1em; transition: all .2s linear;"
-        ) }
-      })
-    }
+    // if (id !== null) {
+    //   let selection = document.querySelector(`[data-id='${id}']`)
+    //   selection.classList.add('selected')
+    //   let schools = document.getElementById('school-list').querySelectorAll('.fade.show:not(.selected)')
+    //   this.setState({ selectedSchool: id }, () => {
+    //     for(let i = 0; i < schools.length; i++) {schools[i].setAttribute(
+    //       "style", "opacity: 0; height: 0; padding: 0; margin: 0; transition: all .2s linear;"
+    //     )}
+    //   })
+    // }
+    // else {
+    //   let selection = document.querySelector('.selected')
+    //   selection.classList.remove('selected')
+    //   let schools = document.getElementById('school-list').querySelectorAll('.fade.show:not(.selected)')
+    //   this.setState({ selectedSchool: null }, () => {
+    //     for(let i = 0; i < schools.length; i++) {schools[i].setAttribute(
+    //       "style", "opacity: 100; height: auto; padding: 1em; margin: 0 1em 1em; transition: all .2s linear;"
+    //     ) }
+    //   })
+    // }
     
   }
 
@@ -217,36 +231,50 @@ class SchoolsList extends Component {
     let {user_schools, all_schools, selectedSchool} = this.state
     let school = user_schools.find(school => school.id === selectedSchool)
 
-    return (
-      // Show call schools if no selected school : show only selection if made
-      <div id="school-list" className={styles.container}>
-        {
-          this.state.loading === true 
-          ? 
-          <Fade in={this.state.fadeIn}>
-            <Spinner color="info" />
-          </Fade>
-          : 
-          <Fragment>
-            {/* <Fade in={this.state.fadeIn}> */}
-              <InputGroup className={styles.selectInput}>
-                <Select 
-                  className={styles.searchInput} 
-                  options={all_schools.map(school => {
-                    return Object.assign({value: school.id, label: school.name})
-                  })} 
-                  onChange={this.handleSelectChange.bind(this)} 
-                />
-                <Button color="success" onClick={() => this.handleAddSchool(user_id)}>Add School</Button>
-              </InputGroup>
-            {/* </Fade> */}
+    // return (
+    //   // Show call schools if no selected school : show only selection if made
+    //   // <div id="school-list" className={styles.container}>
+    //   <Fragment>
+    //     {
+    //       this.state.loading === true 
+    //       ? 
+    //       <Fade in={this.state.fadeIn}>
+    //         <Spinner color="info" />
+    //       </Fade>
+    //       : 
+    //       <Fragment>
+    //         {/* <Fade in={this.state.fadeIn}> */}
+    //           <InputGroup className={styles.selectInput}>
+    //             <Select 
+    //               className={styles.searchInput} 
+    //               options={all_schools.map(school => {
+    //                 return Object.assign({value: school.id, label: school.name})
+    //               })} 
+    //               onChange={this.handleSelectChange.bind(this)} 
+    //             />
+    //             <Button color="success" onClick={() => this.handleAddSchool(user_id)}>Add School</Button>
+    //           </InputGroup>
+    //         {/* </Fade> */}
 
-            {/* {selectedSchool === null ? user_schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
-            {this.state.user_schools.map(school => this.renderSchool(school))}
-          </Fragment>
-        }
-      </div>
-    )
+    //         {/* {selectedSchool === null ? user_schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
+    //         {this.state.user_schools.map(school => this.renderSchool(school))}
+    //       </Fragment>
+    //     }
+    //   </Fragment>
+    // )
+    return (
+      <Fragment>
+
+        <Select className={styles.searchInput} 
+          options={all_schools.map(school => Object.assign({value: school.id, label: school.name}))} 
+          onChange={this.handleSelectChange.bind(this)} 
+        />
+        <Button color="success" onClick={() => this.handleAddSchool(user_id)}>Add School</Button>
+
+        {user_schools.map(school => this.renderSchool(school))}
+
+      </Fragment>
+      )
   }
 }
 

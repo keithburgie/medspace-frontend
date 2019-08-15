@@ -1,37 +1,37 @@
-// .fade {
-//   width: 100%;
+// // .fade {
+// //   width: 100%;
+// // }
+// .container {
+//   display: flex;
+//   justify-content: center;
+//   flex-flow: row wrap;
+//   overflow: scroll;
+//   padding-top: 1em;
 // }
-.container {
-  display: flex;
-  justify-content: center;
-  flex-flow: row wrap;
-  overflow: scroll;
-  padding-top: 1em;
-}
 
 .searchInput {
   width: 500px;
   margin-right: 1em;
 }
 
-.selectInput {
-  position: absolute;
-  top: .75em;
-  right: 1em;
-  width: 625px;
-  height: 2.375em;
-}
+// .selectInput {
+//   position: absolute;
+//   top: .75em;
+//   right: 1em;
+//   width: 625px;
+//   height: 2.375em;
+// }
 
-.fadeIn {
-  opacity: 1;
-  transition: opacity 1000ms;
-}
+// .fadeIn {
+//   opacity: 1;
+//   transition: opacity 1000ms;
+// }
 
-.fadeOut {
-  opacity: 0;
-  transition: opacity 1000ms;
-}
+// .fadeOut {
+//   opacity: 0;
+//   transition: opacity 1000ms;
+// }
 
-.selected {
-  background: black;
-}
+// .selected {
+//   background: black;
+// }

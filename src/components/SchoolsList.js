@@ -61,39 +61,6 @@ class SchoolsList extends Component {
     })
   }
 
-  addSchool = (user_id) => {
-    const user_school = {
-      school_id: this.state.inputValue,
-      user_id: user_id
-    }
-    // Post the new UserSchool
-    fetch(userSchoolsUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user_school)
-    })
-    .then(r => r.json()).then(new_user_school => {
-      // Create new Todos for new UserSchool
-      this.createDefaultTodos(new_user_school.id)
-    })
-    .catch(error => console.log(error))
-  }
-
-  setSchool = (user_school) => {
-    // TODO: FIGURE OUT HOW TO FETCH *AFTER* ALL TODOS HAVE POSTED
-    fetch(`${userSchoolsUrl}/${user_school}`)
-    .then(r => r.json()
-    .then(user_school => {
-      this.setState({
-        user_schools: [...this.state.user_schools, user_school]
-      })
-    }))
-    .catch(error => console.log(error))
-  }
-
-  
-
-
   deleteSchool = (e) => {
     const id = parseInt(e.target.dataset.id)
     fetch(`${userSchoolsUrl}/${id}`, {method: 'DELETE'})
@@ -105,14 +72,67 @@ class SchoolsList extends Component {
     })).catch(error => console.log(error))
   }
 
+  
+
+  postSchool = (user_id) => {
+    const user_school = {
+      school_id: this.state.inputValue,
+      user_id: user_id
+    }
+    return new Promise(function(resolve, reject) {
+      resolve (
+        // Post the new UserSchool
+        fetch(userSchoolsUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user_school)
+        })
+        .then(r => r.json())
+        .then(new_user_school => {
+          return new_user_school.id
+        })
+        .catch(error => console.log(error))
+      )
+    })
+  }
+
   createDefaultTodos = (user_school_id) => {
     const tasks = [
       "Request Recs", "Send Recs", "Send Essay", "Follow Up", 
       "Send Secondary", "Interview", "Send Thank Yous"
     ]
+    const todos = tasks.map(async (task) => this.addTodo(task, user_school_id))
 
-    tasks.map(task => this.addTodo(task, user_school_id))
+    return new Promise(function(resolve, reject) {
+      resolve ( Promise.all(todos) )
+    })
+    
   }
+
+  setSchool = (user_school_id) => {
+    let school = user_school_id[0]
+    let the = this
+    return new Promise(function(resolve, reject) {
+      resolve(
+        // TODO: FIGURE OUT HOW TO FETCH *AFTER* ALL TODOS HAVE POSTED
+        fetch(`${userSchoolsUrl}/${school}`)
+        .then(r => r.json()
+        .then(user_school => {
+          the.setState({user_schools: [
+            ...the.state.user_schools, user_school
+          ]})
+        }))
+        .catch(error => console.log(error))
+      )
+    })
+  }
+
+  addSchool(user_id) {
+    return this.postSchool(user_id)
+    .then(this.createDefaultTodos)
+    .then(this.setSchool)
+  }
+
 
   addTodo = (task, user_school_id) => {
     let todo = {
@@ -123,13 +143,15 @@ class SchoolsList extends Component {
       due: new Date().toISOString()
     }
 
-    fetch(todosUrl, {
+    return fetch(todosUrl, {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify(todo)
     })
     .then(r => r.json())
-    .then(todo => {console.log("Todo Added: ", todo)})
+    .then(todo => {
+      return user_school_id
+    })
     .catch(error => console.log(error))
   }
 

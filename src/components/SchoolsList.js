@@ -2,7 +2,7 @@ import React, {Component, Fragment} from 'react';
 // import {Form, FormGroup, Label, FormText} from 'reactstrap';
 import {Spinner, Fade, Button, InputGroup} from 'reactstrap';
 // import TypeaheadSearch from './TypeaheadSearch.js'
-import Select from 'react-select'
+import Select from "react-select-virtualized";
 
 import styles from './SchoolsList.module.scss';
 import School from './School.js';
@@ -187,6 +187,7 @@ class SchoolsList extends Component {
   }
 
   selectSchool = id => {
+    console.log("School selected: ", id)
     // if (id !== null) {
     //   let selection = document.querySelector(`[data-id='${id}']`)
     //   selection.classList.add('selected')
@@ -255,8 +256,9 @@ class SchoolsList extends Component {
     return (
       <Fragment>
 
-        <Select className={styles.searchInput} 
-          options={all_schools.map(school => Object.assign({value: school.id, label: school.name}))} 
+        <Select 
+          className={styles.searchInput} 
+          options={all_schools.map(school => ({ value: school.id, label: school.name }))} 
           onChange={this.handleSelectChange.bind(this)} 
         />
         <Button color="success" onClick={() => this.addSchool(user_id)}>Add School</Button>

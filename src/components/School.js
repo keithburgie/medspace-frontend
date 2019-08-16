@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import {Collapse as SchoolBody} from 'reactstrap';
-import {Fade as SchoolWrapper } from 'reactstrap';
+import {Collapse as SchoolBody, Fade as SchoolWrapper } from 'reactstrap';
 import styles from './School.module.scss';
 import SchoolHeader from './SchoolHeader.js'
 import TodoList from './TodoList.js'

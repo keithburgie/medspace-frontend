@@ -127,10 +127,30 @@ class SchoolsList extends Component {
     })
   }
 
-  addSchool(user_id) {
-    return this.postSchool(user_id)
-    .then(this.createDefaultTodos)
-    .then(this.setSchool)
+  // addSchool(user_id) {
+  //   return this.postSchool(user_id)
+  //   .then(this.createDefaultTodos)
+  //   .then(this.setSchool)
+  // }
+
+  addSchool = (user_id) => {
+    const user_school = {
+      school_id: this.state.inputValue,
+      user_id: user_id
+    }
+    // Post the new UserSchool
+    fetch(userSchoolsUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(user_school)
+    })
+    .then(r => r.json())
+    .then(new_user_school => {
+      this.setState({user_schools: [
+        ...this.state.user_schools, new_user_school
+      ]})
+    })
+    .catch(error => console.log(error))
   }
 
 
@@ -223,35 +243,35 @@ class SchoolsList extends Component {
     let school = user_schools.find(school => school.id === selectedSchool)
 
     // return (
-      //   // Show call schools if no selected school : show only selection if made
-      //   // <div id="school-list" className={styles.container}>
-      //   <Fragment>
-      //     {
-      //       this.state.loading === true 
-      //       ? 
-      //       <Fade in={this.state.fadeIn}>
-      //         <Spinner color="info" />
-      //       </Fade>
-      //       : 
-      //       <Fragment>
-      //         {/* <Fade in={this.state.fadeIn}> */}
-      //           <InputGroup className={styles.selectInput}>
-      //             <Select 
-      //               className={styles.searchInput} 
-      //               options={all_schools.map(school => {
-      //                 return Object.assign({value: school.id, label: school.name})
-      //               })} 
-      //               onChange={this.handleSelectChange.bind(this)} 
-      //             />
-      //             <Button color="success" onClick={() => this.addSchool(user_id)}>Add School</Button>
-      //           </InputGroup>
-      //         {/* </Fade> */}
+    //     // Show call schools if no selected school : show only selection if made
+    //     // <div id="school-list" className={styles.container}>
+    //     <Fragment>
+    //       {
+    //         this.state.loading === true 
+    //         ? 
+    //         <Fade in={this.state.fadeIn}>
+    //           <Spinner color="info" />
+    //         </Fade>
+    //         : 
+    //         <Fragment>
+    //           {/* <Fade in={this.state.fadeIn}> */}
+    //             <InputGroup className={styles.selectInput}>
+    //               <Select 
+    //                 className={styles.searchInput} 
+    //                 options={all_schools.map(school => {
+    //                   return Object.assign({value: school.id, label: school.name})
+    //                 })} 
+    //                 onChange={this.handleSelectChange.bind(this)} 
+    //               />
+    //               <Button color="success" onClick={() => this.addSchool(user_id)}>Add School</Button>
+    //             </InputGroup>
+    //           {/* </Fade> */}
 
-      //         {/* {selectedSchool === null ? user_schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
-      //         {this.state.user_schools.map(school => this.renderSchool(school))}
-      //       </Fragment>
-      //     }
-      //   </Fragment>
+    //           {/* {selectedSchool === null ? user_schools.map(i => this.renderSchool(i)) : this.renderSchool(school)} */}
+    //           {this.state.user_schools.map(school => this.renderSchool(school))}
+    //         </Fragment>
+    //       }
+    //     </Fragment>
     // )
     return (
       <Fragment>

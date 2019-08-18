@@ -1,0 +1,19 @@
+$spacer: 1em;
+$border-color: rgba(141, 137, 137, 0.5);
+
+@mixin border($thickness: 1px, $color: $border-color, $radius: 4px) {
+  border: $thickness solid $color;
+  border-radius: $radius;
+}
+
+@mixin background($color) {
+  background: $color;
+}
+
+@mixin container($direction, $wrap) {
+  display: flex;
+  flex-flow: $direction $wrap;
+  margin: 0 auto;
+  max-width: 75em;
+  width: 100%;
+}

@@ -1,3 +1,19 @@
+@import '../assets/styles/variables.scss';
+
+.todo {
+  flex: 1;
+  @include border();
+  margin-bottom: $spacer;
+  padding: $spacer;
+  opacity: 1;
+  transition: all .5s linear;
+
+  .todoGroup {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
 .toDoTable {
   display: flex;
   flex-direction: column;
@@ -28,11 +44,13 @@
   }
 }
 
-.deleteTodo button {
-  border-radius: 50%;
+.deleteTodo, .checkTodo {
+  button {
+    border-radius: 50%;
     height: 30px;
     width: 30px;
     line-height: 1;
     border: 1px solid;
-    margin-right: .5em;
-}
+    padding-bottom: 7px;
+  }
+} 

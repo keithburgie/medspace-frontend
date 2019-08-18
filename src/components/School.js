@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-import {Collapse as SchoolBody, Fade as SchoolWrapper } from 'reactstrap';
+import {Collapse as SchoolBody, Fade as SchoolCard, Button} from 'reactstrap';
+import {FaAngleDown, FaTimes as FaDelete } from 'react-icons/fa';
 import styles from './School.module.scss';
-import SchoolHeader from './SchoolHeader.js'
 import TodoList from './TodoList.js'
-
-// const api = `http://localhost:3000/api/v1`
-// const userSchoolsRoute = `${api}/user_schools`
 
 class School extends Component {
 
@@ -27,40 +24,34 @@ class School extends Component {
 
   onEntering(e) { 
     console.log("entering")
-    this.setState({ status: 'Opening...' }, this.props.selectSchool(parseInt(e.firstElementChild.dataset.id)))
+    this.setState({ status: 'Opening...' })
   }
-  onEntered() { 
-    this.setState({ status: 'Opened' })
-  }
+
   onExiting() { 
     console.log("closing")
-    this.setState({ status: 'Closing...' }, this.props.selectSchool(null))
-  }
-  onExited() { 
-    this.setState({ status: 'Closed' })
+    this.setState({ status: 'Closing...' })
   }
 
-  toggle() {
-    this.setState({ 
-      collapse: !this.state.collapse 
-    })
-    console.log("such toggle")
-  }
+  onEntered() { this.setState({ status: 'Opened' }) }
+
+  onExited() { this.setState({ status: 'Closed' }) }
+
+  toggle() { this.setState({ collapse: !this.state.collapse }) }
 
   render() {
-    let {school, todos, deleteSchool, deleteTodo, user_school} = this.props
+    let {school, todos, deleteSchool, user_school} = this.props
     let {fadeIn, collapse} = this.state
 
     return (
-      <SchoolWrapper data-id={school.id} in={fadeIn} className={styles.schoolWrapper}>
+      <SchoolCard data-id={school.id} in={fadeIn} className={styles.schoolCard}>
         
-        <SchoolHeader 
-          user_school={user_school}
-          school={school}
-          collapse={collapse} 
-          toggle={this.toggle} 
-          deleteSchool={deleteSchool}
-        />
+        <header className={styles.collapseHeader}>
+          <h3>{school.name.split(',')[0]}</h3>
+          <div className={styles.buttonWrapper}>
+            <button data-id={user_school.id}  onClick={deleteSchool}> <FaDelete /> </button>
+            <button data-status={collapse ? "expand" : "collapse"} data-id={user_school.id} onClick={(e) => this.toggle(e)}> <FaAngleDown/> </button>
+          </div>
+        </header>
 
         <SchoolBody isOpen={collapse} 
           onEntering={this.onEntering} 
@@ -72,11 +63,11 @@ class School extends Component {
             {school.city}, {school.state} | {school.program} Program
           </p>
 
-          <TodoList key={school.id} school={school} todos={todos} deleteTodo={deleteTodo} />
+          <TodoList key={school.id} user_school={user_school.id} todos={todos} />
 
         </SchoolBody>
 
-      </SchoolWrapper>
+      </SchoolCard>
     )
   }
 }

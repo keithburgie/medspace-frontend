@@ -8,13 +8,34 @@ class Todo extends PureComponent {
   render() {
 
     const {todo, deleteTodo} = this.props
+
     return (
-      <div className={styles.toDoTableRow}>
-        <span>{todo.task}</span> 
-        <span>{todo.done === false ? <Button color="secondary" size="sm">Mark Complete</Button> : "Done!"}</span> 
-        <span>{todo.note || "note"}</span> 
-        <span><Moment format="YYYY/MM/DD">{todo.due}</Moment></span>
-        <span className={styles.deleteTodo}><Button data-id={todo.id} onClick={deleteTodo} color="danger" size="sm">x</Button></span>
+      <div data-todo className={styles.todo}>
+
+        {/* <span className={styles.checkTodo}>
+        {
+          todo.done === false 
+          ? <Button color="secondary" size="sm">⃠</Button> 
+          : <Button color="success" size="sm">✓</Button>
+        }
+        </span> */}
+
+        <div className={styles.todoGroup}>
+          <h4>{todo.task}</h4> 
+          <span className={styles.deleteTodo}>
+            <Button data-id={todo.id} onClick={deleteTodo} color="danger" size="sm">✘</Button>
+          </span>
+        </div>
+
+        <div className={styles.todoGroup}>
+          <span>
+            {todo.note || "(Note Here)"}
+          </span> 
+          <span>
+            <Moment format="YYYY/MM/DD">{todo.due}</Moment>
+          </span>
+        </div>
+
       </div>
     )
   }

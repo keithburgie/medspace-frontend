@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {Collapse as SchoolBody, Fade as SchoolCard, Button} from 'reactstrap';
-import {FaAngleDown, FaTimes as FaDelete } from 'react-icons/fa';
+import {Collapse as SchoolBody, Fade as SchoolCard, Button, Col} from 'reactstrap';
+import {FaAngleDown, FaTrashAlt } from 'react-icons/fa';
 import styles from './School.module.scss';
 import TodoList from './TodoList.js'
 
@@ -43,31 +43,33 @@ class School extends Component {
     let {fadeIn, collapse} = this.state
 
     return (
-      <SchoolCard data-id={school.id} in={fadeIn} className={styles.schoolCard}>
+      <Col sm={6} md={4}>
+        <SchoolCard data-id={school.id} in={fadeIn} className={styles.schoolCard}>
         
-        <header className={styles.collapseHeader}>
-          <h3>{school.name.split(',')[0]}</h3>
-          <div className={styles.buttonWrapper}>
-            <button data-id={user_school.id}  onClick={deleteSchool}> <FaDelete /> </button>
-            <button data-status={collapse ? "expand" : "collapse"} data-id={user_school.id} onClick={(e) => this.toggle(e)}> <FaAngleDown/> </button>
-          </div>
-        </header>
+          <header className={styles.collapseHeader}>
+            <h3>{school.name.split(',')[0]}</h3>
+            <div className={styles.buttonWrapper}>
+              <button data-id={user_school.id}  onClick={deleteSchool}> <FaTrashAlt /> </button>
+              <button data-status={collapse ? "expand" : "collapse"} data-id={user_school.id} onClick={(e) => this.toggle(e)}> <FaAngleDown/> </button>
+            </div>
+          </header>
 
-        <SchoolBody isOpen={collapse} 
-          onEntering={this.onEntering} 
-          onEntered={this.onEntered}
-          onExiting={this.onExiting} 
-          onExited={this.onExited}>
+          <SchoolBody isOpen={collapse} 
+            onEntering={this.onEntering} 
+            onEntered={this.onEntered}
+            onExiting={this.onExiting} 
+            onExited={this.onExited}>
 
-          <p data-id={school.id} className={styles.small}>
-            {school.city}, {school.state} | {school.program} Program
-          </p>
+            <p data-id={school.id} className={styles.small}>
+              {school.city}, {school.state} | {school.program} Program
+            </p>
 
-          <TodoList key={school.id} user_school={user_school.id} todos={todos} />
+            <TodoList key={school.id} user_school={user_school.id} todos={todos} />
 
-        </SchoolBody>
+          </SchoolBody>
 
-      </SchoolCard>
+        </SchoolCard>
+      </Col>
     )
   }
 }

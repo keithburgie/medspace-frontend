@@ -1,5 +1,10 @@
 @import '../assets/styles/variables.scss';
 
+.todoList {
+  display: flex;
+  flex-direction: column;
+}
+
 .todo {
   flex: 1;
   @include border();
@@ -14,32 +19,34 @@
   }
 }
 
-.toDoTable {
-  display: flex;
-  flex-direction: column;
+.checkbox {
+  transition: all .1s linear;
+  margin-right: 4px;
+
+  &:hover { 
+    cursor: pointer; 
+  }
+  &[data-done="true"] { 
+    color: green;
+  }
+  svg {
+    padding-bottom: 3px;
+  }
 }
 
-.toDoTableRow {
+.newTodoForm {
   display: flex;
-  padding: .5em;
-  border-top: 1px solid;
+  flex-flow: row wrap;
+  padding: $spacer;
+  @include border();
+  align-items: flex-end;
+  padding-bottom: 0;
 
-  &:first-child {
-    font-weight: bold;
-    border-top: 0;
-  }
+  > .formGroup {
+    flex: 1 0 auto;
 
-  &:last-child {
-    // border-bottom: 0;
-  }
-
-  > span {
-    flex: 1.5;
-    line-height: 1.8;
-
-    &:last-child {
-      flex: .25;
-      text-align: center;
+    button {
+      width: 100%;
     }
   }
 }

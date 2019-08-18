@@ -1,9 +1,19 @@
 import React, {Component, Fragment} from 'react';
 import API from '../routes'
 import axios from 'axios'
-
-// import {Form, FormGroup, Label, FormText} from 'reactstrap';
-import {Spinner, Fade, Button, InputGroup} from 'reactstrap';
+import {Spinner, Fade, Button, InputGroup, Container, Row, Col} from 'reactstrap';
+import {
+  Collapse,
+  Navbar,
+  NavbarToggler,
+  NavbarBrand,
+  Nav,
+  NavItem,
+  NavLink,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem } from 'reactstrap';
 import Select from "react-select-virtualized";
 import styles from './SchoolsList.module.scss';
 import School from './School.js';
@@ -39,7 +49,8 @@ class SchoolsList extends Component {
       })
       this.setState({
         user_schools: [...this.state.user_schools, ...user_schools],
-        all_schools: [...this.state.all_schools, ...all_schools_obj.data]
+        all_schools: [...this.state.all_schools, ...all_schools_obj.data],
+        loading: false
       })
     }))
   }
@@ -86,28 +97,40 @@ class SchoolsList extends Component {
   schoolSelect = obj => this.setState({ inputValue: obj.value })
 
   render() {
-    let {user_schools, all_schools} = this.state
+    let {user_schools, all_schools, loading} = this.state
     let user_id = parseInt(localStorage.getItem('user_id'))
 
     return (
-      <Fragment>
+      <Container fluid>
+        <Row>
+          <Col>
+            <Navbar className={styles.schoolsBar}>
+              <Nav className="ml-auto" navbar>
+                <NavItem>
+                  <Select 
+                    className={styles.searchInput} 
+                    options={all_schools.map(school => ({ value: school.id, label: school.name }))} 
+                    onChange={this.schoolSelect.bind(this)} 
+                  />
+                  <Button 
+                    color="success" 
+                    onClick={() => this.addSchool(user_id)}>
+                      Add School
+                  </Button>
+                </NavItem>
+              </Nav>
+            </Navbar>
+          </Col>
+        </Row>
 
-        <Select 
-          className={styles.searchInput} 
-          options={all_schools.map(school => ({ value: school.id, label: school.name }))} 
-          onChange={this.schoolSelect.bind(this)} 
-        />
-        <Button 
-          color="success" 
-          onClick={() => this.addSchool(user_id)}>
-            Add School
-        </Button>
-
-        <div className={styles.schoolsContainer}>
-          { user_schools.map(school => this.renderSchool(school)) }
-        </div>
-        
-      </Fragment>
+        <Row>
+            { 
+              loading 
+              ? <Fade className={styles.loader}><Spinner /></Fade>
+              : user_schools.map(school => this.renderSchool(school))
+            }  
+        </Row>
+      </Container>
     )
   }
 }

@@ -1,5 +1,10 @@
 @import '../assets/styles/variables.scss';
 
+.topnav {
+  @include containerColor($theme-color, white);
+}
+
 .navContainer {
   @include container(row, wrap);
+  
 }

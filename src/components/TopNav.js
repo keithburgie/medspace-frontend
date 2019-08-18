@@ -1,6 +1,9 @@
 import React from 'react';
 import styles from './TopNav.module.scss'
 import {
+  Container,
+  Row,
+  Col,
   Collapse,
   Navbar,
   NavbarToggler,
@@ -29,8 +32,8 @@ export default class TopNav extends React.Component {
   }
   render() {
     return (
-      <Navbar color="light" light expand="md">
-        <div className={styles.navContainer}>
+      <Navbar className={styles.topnav} light expand="md">
+        <Container fluid>
           <NavbarBrand href="#">MEDSPACE</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
@@ -60,7 +63,7 @@ export default class TopNav extends React.Component {
               </UncontrolledDropdown>
             </Nav>
           </Collapse>
-        </div>
+        </Container>
       </Navbar>
     );
   }

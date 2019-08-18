@@ -1,5 +1,13 @@
 @import '../assets/styles/variables.scss';
 
+.loader {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
 .schoolsContainer {
   @include container(row, wrap);
   padding: $spacer 0;
@@ -9,4 +17,12 @@
   width: 500px;
   margin-right: 0.5em;
   float: left;
+}
+
+.schoolsBar {
+  width: 100%;
+  margin-bottom: 1em;
+  padding: 1em;
+  background: $container-bg;
+  @include border()
 }

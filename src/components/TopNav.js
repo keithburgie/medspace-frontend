@@ -1,4 +1,5 @@
 import React from 'react';
+import {Route, Link} from 'react-router-dom'
 import styles from './TopNav.module.scss'
 import {
   Container,
@@ -61,6 +62,11 @@ export default class TopNav extends React.Component {
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
+              <NavItem>
+                <NavLink>
+                  <Link to="/dashboard">Dashboard</Link>
+                </NavLink>
+              </NavItem>
             </Nav>
           </Collapse>
         </Container>

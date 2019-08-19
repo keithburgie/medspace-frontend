@@ -1,6 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import API from '../routes'
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 import {Spinner, Fade, Button, ButtonGroup, Container, Row,  Col, Navbar, Nav, NavItem} from 'reactstrap';
 import {FaPollH, FaPoll, FaFilter } from 'react-icons/fa';
 import Select from "react-select-virtualized";
@@ -132,6 +133,7 @@ class SchoolsList extends Component {
               : user_schools.map(school => this.renderSchool(school))
             }  
         </Row>
+        
       </Container>
     )
   }

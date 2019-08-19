@@ -1,9 +1,11 @@
 import React, {Component, Fragment} from 'react';
+import {Route, Link} from 'react-router-dom'
 // import assets from './routes'
 // import logo from '../src/assets/images/logo.svg';
 import styles from './App.module.scss'
 import TopNav from './TopNav'
 import SchoolsList from './SchoolsList.js'
+import SchoolPage from './SchoolPage.js'
 
 class App extends Component {
 
@@ -22,8 +24,13 @@ class App extends Component {
 
     return (
       <Fragment>
+
         <TopNav />
-        <SchoolsList />
+
+        <Route exact path="/dashboard" component={SchoolsList} />
+        
+        <Route path="/dashboard/:user_school_id" component={SchoolPage} />
+
       </Fragment>
     );
   }

@@ -26,9 +26,11 @@ class TodoList extends Component {
   handleInput = (e) => {
     this.setState({newTodo: e.target.value})
   }
+
   handleDate = (e) => {
     this.setState({newTodoDate: e.target.value})
   }
+
   handleSubmit = (e) => {
     e.preventDefault()
     this.addTodo(this.props.user_school)

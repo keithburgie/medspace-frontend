@@ -1,19 +1,8 @@
 import React, {Component, Fragment} from 'react';
 import API from '../routes'
 import axios from 'axios'
-import {Spinner, Fade, Button, InputGroup, Container, Row, Col} from 'reactstrap';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem } from 'reactstrap';
+import {Spinner, Fade, Button, ButtonGroup, Container, Row,  Col, Navbar, Nav, NavItem} from 'reactstrap';
+import {FaPollH, FaPoll, FaFilter } from 'react-icons/fa';
 import Select from "react-select-virtualized";
 import styles from './SchoolsList.module.scss';
 import School from './School.js';
@@ -94,7 +83,10 @@ class SchoolsList extends Component {
     return <School key={school.id} user_school={user_school} school={school} todos={todos} deleteSchool={this.deleteSchool} />
   }
 
-  schoolSelect = obj => this.setState({ inputValue: obj.value })
+  // TODO: This errors when you try to clear the select menu
+  schoolSelect = obj => obj.value 
+  ? this.setState({ inputValue: obj.value}) 
+  : this.setState({ inputValue: ''})
 
   render() {
     let {user_schools, all_schools, loading} = this.state
@@ -102,10 +94,20 @@ class SchoolsList extends Component {
 
     return (
       <Container fluid>
+
         <Row>
           <Col>
             <Navbar className={styles.schoolsBar}>
-              <Nav className="ml-auto" navbar>
+              <Nav>
+                <NavItem>
+                  <ButtonGroup>
+                    <Button color="outline-info"><FaPollH /></Button>
+                    <Button color="info"><FaPoll /></Button>
+                  </ButtonGroup>
+                </NavItem>
+                <NavItem>
+                  <Button color="outline-info"><FaFilter /> Filter</Button>
+                </NavItem>
                 <NavItem>
                   <Select 
                     className={styles.searchInput} 
@@ -113,7 +115,7 @@ class SchoolsList extends Component {
                     onChange={this.schoolSelect.bind(this)} 
                   />
                   <Button 
-                    color="success" 
+                    color="outline-info" 
                     onClick={() => this.addSchool(user_id)}>
                       Add School
                   </Button>
@@ -123,10 +125,10 @@ class SchoolsList extends Component {
           </Col>
         </Row>
 
-        <Row>
+        <Row className={styles.sideScroll}>
             { 
               loading 
-              ? <Fade className={styles.loader}><Spinner /></Fade>
+              ? <Fade className={styles.loader}><Spinner color="warning" style={{ width: '10rem', height: '10rem' }} type="grow" /></Fade>
               : user_schools.map(school => this.renderSchool(school))
             }  
         </Row>

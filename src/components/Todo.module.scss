@@ -7,6 +7,7 @@
 
 .todo {
   flex: 1;
+  position: relative;
   @include border();
   margin-bottom: $spacer;
   padding: $spacer;
@@ -19,18 +20,35 @@
   }
 }
 
-.checkbox {
-  transition: all .1s linear;
-  margin-right: 4px;
 
-  &:hover { 
-    cursor: pointer; 
+
+.taskGroup {
+  display: flex;
+  flex: 1;
+}
+
+.todoForm {
+  display: flex;
+  flex: 1;
+
+  input[type="submit"] {
+    &.hide {  display:none; }
   }
-  &[data-done="true"] { 
-    color: green;
-  }
-  svg {
-    padding-bottom: 3px;
+}
+
+
+
+.todoInput {
+  border: none;
+  font-size: 1.25em;
+  line-height: 1;
+  flex: 1;
+
+  &:focus {
+    outline: none;
+    // color: red;
+    // text-decoration: underline;
+    border: 1px solid;
   }
 }
 
@@ -51,13 +69,38 @@
   }
 }
 
-.deleteTodo, .checkTodo {
+.checkbox {
+  transition: all .1s linear;
+  font-size: 1.75em;
+  position: absolute;
+  top: -0.3em;
+  left: -0.4em;
+
+  &:hover { 
+    cursor: pointer; 
+  }
+  &[data-done="true"] { 
+    color: green;
+  }
+  svg {
+    position: absolute;
+    background: white;
+  }
+}
+
+.actions {
+  position: absolute;
+  top: -0.5em;
+  right: -0.5em;
+  background: white;
+
   button {
-    border-radius: 50%;
-    height: 30px;
-    width: 30px;
+    border-radius: 4px;
+    height: 1.75em;
+    width: 1.75em;
     line-height: 1;
     border: 1px solid;
-    padding-bottom: 7px;
+    padding: 0;
+    font-size: 1em;
   }
-} 
+}

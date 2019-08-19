@@ -5,12 +5,17 @@
   width: 100%;
   justify-content: center;
   align-items: center;
-  min-height: 50vh;
+  min-height: 70vh;
 }
 
 .schoolsContainer {
   @include container(row, wrap);
   padding: $spacer 0;
+}
+
+.sideScroll {
+  flex-wrap: nowrap;
+  overflow: scroll;
 }
 
 .searchInput {
@@ -20,9 +25,21 @@
 }
 
 .schoolsBar {
-  width: 100%;
+  display: flex;
   margin-bottom: 1em;
   padding: 1em;
   background: $container-bg;
-  @include border()
+  @include border();
+
+  > ul {
+    display: flex;
+    flex: 1;
+
+    li {
+      margin-right: 1em;
+      &:last-child {
+        margin-left: auto;
+      }
+    }
+  }
 }

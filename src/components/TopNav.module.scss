@@ -2,6 +2,7 @@
 
 .topnav {
   @include containerColor($theme-color, white);
+  margin-bottom: $spacer;
 }
 
 .navContainer {

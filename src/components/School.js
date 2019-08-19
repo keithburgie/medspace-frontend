@@ -43,14 +43,14 @@ class School extends Component {
     let {fadeIn, collapse} = this.state
 
     return (
-      <Col sm={6} md={4}>
+      <Col sm={6} lg={4}>
         <SchoolCard data-id={school.id} in={fadeIn} className={styles.schoolCard}>
         
           <header className={styles.collapseHeader}>
             <h3>{school.name.split(',')[0]}</h3>
             <div className={styles.buttonWrapper}>
-              <button data-id={user_school.id}  onClick={deleteSchool}> <FaTrashAlt /> </button>
-              <button data-status={collapse ? "expand" : "collapse"} data-id={user_school.id} onClick={(e) => this.toggle(e)}> <FaAngleDown/> </button>
+              <Button color="danger" data-id={user_school.id}  onClick={deleteSchool}> <FaTrashAlt /> </Button>
+              <Button color="secondary-outline" data-status={collapse ? "expand" : "collapse"} data-id={user_school.id} onClick={(e) => this.toggle(e)}> <FaAngleDown /> </Button>
             </div>
           </header>
 

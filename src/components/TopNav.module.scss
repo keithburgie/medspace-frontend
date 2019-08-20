@@ -5,6 +5,10 @@
   margin-bottom: $spacer;
 }
 
+li {
+  margin-right: 1em;
+}
+
 .navContainer {
   @include container(row, wrap);
   

@@ -1,76 +1,51 @@
-import React from 'react';
-import {Route, Link} from 'react-router-dom'
+import React, {Fragment} from 'react';
+import {Route, Link, withRouter} from 'react-router-dom'
 import styles from './TopNav.module.scss'
-import {
-  Container,
-  Row,
-  Col,
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem } from 'reactstrap';
+import { Navbar, Container, NavbarBrand, NavItem } from 'reactstrap';
 
-export default class TopNav extends React.Component {
-  constructor(props) {
-    super(props);
+const TopNav = (props) => {
+  let { location: { pathname } } = props
+  let logged_in = props.logged_in;
+  console.log("TopNav logged_in =", logged_in)
+  let logout = () => {
+    //clear localStorage of our jwt
+    localStorage.removeItem("jwt")
+    //set the user state back to null
+    props.updateCurrentUser(null)
+  }
 
-    this.toggle = this.toggle.bind(this);
-    this.state = {
-      isOpen: false
-    };
-  }
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
-  render() {
-    return (
-      <Navbar className={styles.topnav} light expand="md">
-        <Container fluid>
-          <NavbarBrand href="#">MEDSPACE</NavbarBrand>
-          <NavbarToggler onClick={this.toggle} />
-          <Collapse isOpen={this.state.isOpen} navbar>
-            <Nav className="ml-auto" navbar>
-              <NavItem>
-                <NavLink href="#">Resources</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="#">Things</NavLink>
-              </NavItem>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Options
-                </DropdownToggle>
-                <DropdownMenu right>
-                  <DropdownItem>
-                    Option 1
-                  </DropdownItem>
-                  <DropdownItem>
-                    Option 2
-                  </DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem>
-                    Reset
-                  </DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-              <NavItem>
-                <NavLink>
-                  <Link to="/dashboard">Dashboard</Link>
-                </NavLink>
-              </NavItem>
-            </Nav>
-          </Collapse>
-        </Container>
-      </Navbar>
-    );
-  }
-}
+  return (
+    <Navbar className={styles.topnav} light expand="md">
+      
+        <NavbarBrand href="#">MEDSPACE</NavbarBrand>
+        <NavItem>
+          <Link to="/dashboard">Dashboard</Link>
+        </NavItem>
+        {
+        logged_in ? 
+        (
+          <Fragment>
+            <NavItem>
+              <Link to="/profile">Profile</Link>
+                {/* active={pathname === "/profile"} */}
+            </NavItem>
+            
+            <NavItem>
+              {/* <Link to="/logout" onClick={logout}>Logout</Link> */}
+              <Link to="/login" onClick={logout}>Logout</Link>
+            </NavItem>
+          </Fragment>
+        ) 
+        : 
+        (
+        <NavItem>
+          <Link to="/login">Login</Link>
+          {/* // active={pathname === "/login"} */}
+        </NavItem>
+        )
+      }
+    </Navbar>
+  );
+};
+
+export default withRouter(TopNav);

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
-import {Collapse as SchoolBody, Fade as SchoolCard, Button, Col} from 'reactstrap';
+import {Collapse as SchoolBody, Fade as Card, Button, Col} from 'reactstrap';
 import {FaAngleDown, FaTrashAlt } from 'react-icons/fa';
 import styles from './School.module.scss';
 import TodoList from './TodoList.js'
 
-class School extends Component {
+class SchoolCard extends Component {
 
   constructor(props) {
     super(props);
@@ -44,18 +44,35 @@ class School extends Component {
     let {fadeIn, collapse} = this.state
 
     return (
-      <Col sm={6} lg={4}>
-        <SchoolCard data-id={school.id} in={fadeIn} className={styles.schoolCard}>
+      <Col sm={6} lg={4} xl={3}>
+        <Card data-id={school.id} in={fadeIn} className={styles.schoolCard}>
         
           <header className={styles.collapseHeader}>
-            <h3><Link to={`/dashboard/${user_school.id}`}>{school.name.split(',')[0]}</Link></h3>
+
+            <h3>
+              <Link to={`/dashboard/${user_school.id}`}>
+                {school.name.split(',')[0]}
+              </Link>
+            </h3>
+
             <div className={styles.buttonWrapper}>
-              <Button color="danger" data-id={user_school.id}  onClick={deleteSchool}> <FaTrashAlt /> </Button>
-              <Button color="secondary-outline" data-status={collapse ? "expand" : "collapse"} data-id={user_school.id} onClick={(e) => this.toggle(e)}> <FaAngleDown /> </Button>
+              <Button color="danger" 
+                data-id={user_school.id}  
+                onClick={deleteSchool}> 
+                <FaTrashAlt />
+              </Button>
+              <Button color="secondary-outline" 
+                data-status={collapse ? "expand" : "collapse"} 
+                data-id={user_school.id} 
+                onClick={(e) => this.toggle(e)}>
+                <FaAngleDown />
+              </Button>
             </div>
+
           </header>
 
-          <SchoolBody isOpen={collapse} 
+          <SchoolBody 
+            isOpen={collapse} 
             onEntering={this.onEntering} 
             onEntered={this.onEntered}
             onExiting={this.onExiting} 
@@ -69,11 +86,11 @@ class School extends Component {
 
           </SchoolBody>
 
-        </SchoolCard>
+        </Card>
       </Col>
     )
   }
 }
 
-export default School;
+export default SchoolCard;
 

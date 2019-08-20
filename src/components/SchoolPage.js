@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import {Fade} from 'reactstrap';
 import API from '../routes'
 import { Link } from 'react-router-dom'
 // import styles from './SchoolPage.module.scss';
@@ -7,7 +8,8 @@ import { Link } from 'react-router-dom'
 class SchoolPage extends Component {
 
   state = {
-    user_school: {}
+    user_school: {},
+    school: {}
   }
 
   componentDidMount() {
@@ -15,15 +17,19 @@ class SchoolPage extends Component {
     const {match: { params }} = this.props
 
     API.get(`/user_schools/${params.user_school_id}`)
-    .then(({data}) => this.setState({ user_school: data }))
+    .then(({data}) => {
+      this.setState({ 
+        user_school: data,
+        school: data.school
+      })
+    })
   }
 
   render() {
-
     return (
-      <Fragment>
-         <h1><Link to={"/dashboard"}> &lt;&lt; Back </Link> | School ID: {this.state.user_school.school_id}</h1>
-      </Fragment>
+      <Fade>
+        <h1><Link to={"/dashboard"}> &lt;&lt; Back </Link> | {this.state.school.name}</h1>
+      </Fade>
     )
   }
 }

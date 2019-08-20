@@ -6,7 +6,7 @@ import {Spinner, Fade, Button, ButtonGroup, Container, Row,  Col, Navbar, Nav, N
 import {FaPollH, FaPoll, FaFilter } from 'react-icons/fa';
 import Select from "react-select-virtualized";
 import styles from './SchoolsList.module.scss';
-import School from './School.js';
+import SchoolCard from './SchoolCard.js';
 
 
 // -------------------------------------------------------------
@@ -34,8 +34,8 @@ class SchoolsList extends Component {
     ])
     .then(axios.spread((all_schools_obj, user_schools_obj) => {
       const user_schools = user_schools_obj.data.filter(user_school => {
-        // Return user_schools where user_id matches logged in user_id
-        return user_school.user_id === parseInt(localStorage.getItem('user_id'))
+        // Return user_schools where user_id matches logged in user id
+        return user_school.user_id === this.props.user.id
       })
       this.setState({
         user_schools: [...this.state.user_schools, ...user_schools],
@@ -81,7 +81,7 @@ class SchoolsList extends Component {
 
     console.log(`renderSchool() => ${school.name.split(" ")[0]}, #${school.id}`)
 
-    return <School key={school.id} user_school={user_school} school={school} todos={todos} deleteSchool={this.deleteSchool} />
+    return <SchoolCard key={school.id} user_school={user_school} school={school} todos={todos} deleteSchool={this.deleteSchool} />
   }
 
   // TODO: This errors when you try to clear the select menu
@@ -117,7 +117,7 @@ class SchoolsList extends Component {
                   />
                   <Button 
                     color="outline-info" 
-                    onClick={() => this.addSchool(user_id)}>
+                    onClick={() => this.addSchool(this.props.user.id)}>
                       Add School
                   </Button>
                 </NavItem>

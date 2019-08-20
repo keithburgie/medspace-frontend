@@ -51,8 +51,7 @@ class TodoList extends Component {
     }
 
     API.post(`todos`, todo)
-    .then(todo => { 
-      console.log("addTodo:", todo)
+    .then(todo => {
       this.setState({
         todos: [...this.state.todos, todo.data]
       })
@@ -77,12 +76,11 @@ class TodoList extends Component {
       <div className={styles.todoList}>
 
         {this.state.todos.map(todo => {
-          return (
-            <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
-          )
+          return <Todo key={todo.id} todo={todo} deleteTodo={this.deleteTodo} />
         })}
 
         <Form className={styles.newTodoForm} onSubmit={this.handleSubmit}>
+
           <FormGroup className={styles.formGroup}>
             <Label for="exampleText">New Todo</Label>
             <Input 
@@ -94,6 +92,7 @@ class TodoList extends Component {
               placeholder="Add new todo..."
             />
           </FormGroup>
+
           <FormGroup className={styles.formGroup}>
             <Label for="exampleDate">Due Date</Label>
             <Input
@@ -105,10 +104,13 @@ class TodoList extends Component {
               placeholder="date placeholder"
             />
           </FormGroup>
+
           <FormGroup className={styles.formGroup}>
             <Button type="submit"> <FaAdd/> New Todo </Button>
           </FormGroup>
+
         </Form> 
+
       </div>
     )
   }

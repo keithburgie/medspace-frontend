@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react';
 import {Link, withRouter} from 'react-router-dom'
 import styles from './TopNav.module.scss'
-import { Navbar, NavbarBrand, NavItem } from 'reactstrap';
+import { Navbar, NavbarBrand, Nav, NavItem, NavLink } from 'reactstrap';
 
 const TopNav = (props) => {
   // let { location: { pathname } } = props
@@ -15,37 +15,22 @@ const TopNav = (props) => {
   }
 
   return (
-    <Navbar className={styles.topnav} light expand="md">
-      
-        <NavbarBrand href="#">MEDSPACE</NavbarBrand>
-        <NavItem>
-          <Link to="/dashboard">Dashboard</Link>
-        </NavItem>
-        {
-        logged_in ? 
-        (
-          <Fragment>
-            <NavItem>
-              <Link to="/profile">Profile</Link>
-                {/* active={pathname === "/profile"} */}
-            </NavItem>
-            
-            <NavItem>
-              {/* <Link to="/logout" onClick={logout}>Logout</Link> */}
-              <Link to="/login" onClick={logout}>Logout</Link>
-            </NavItem>
-          </Fragment>
-        ) 
-        : 
-        (
-        <NavItem>
-          <Link to="/login">Login</Link>
-          {/* // active={pathname === "/login"} */}
-        </NavItem>
-        )
-      }
+    <Navbar className={styles.topnav} fixed={true} light expand="lg">
+      <NavbarBrand href="/dashboard">MEDSPACE</NavbarBrand>
+      <Nav className="ml-auto" navbar>
+        { logged_in 
+        ? (<Fragment>
+            <NavItem><NavLink href="/dashboard">Dashboard</NavLink></NavItem>
+            <NavItem><NavLink href="/profile">Profile</NavLink></NavItem>  {/* active={pathname === "/profile"} */}
+            <NavItem><NavLink href="/login" onClick={logout}>Logout</NavLink></NavItem> {/* <NavLink href="/logout" onClick={logout}>Logout</NavLink> */}
+          </Fragment>) 
+        
+        : (<NavItem><NavLink href="/login">Login</NavLink></NavItem>) 
+        // active={pathname === "/login"}
+        }
+      </Nav>
     </Navbar>
-  );
-};
+  )
+}
 
 export default withRouter(TopNav);

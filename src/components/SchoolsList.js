@@ -8,14 +8,6 @@ import Select from "react-select-virtualized";
 import styles from './SchoolsList.module.scss';
 import SchoolCard from './SchoolCard.js';
 
-
-// -------------------------------------------------------------
-
-// const schoolId = 2
-// const schoolsLimit = `?limit=10`
-// const schoolsUrl = `${api}/schools${schoolsLimit}`
-// const schoolUrl = `${schoolsUrl}/${schoolId}`
-
 class SchoolsList extends Component {
 
     state = { 

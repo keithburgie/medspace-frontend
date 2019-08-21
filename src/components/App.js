@@ -1,7 +1,7 @@
 import React, {Component, Fragment} from 'react';
 import {Route, Switch, Redirect, withRouter} from 'react-router-dom'
 import API from '../routes'
-// import styles from './App.module.scss'
+import styles from './App.module.scss'
 import TopNav from './TopNav'
 import SchoolsList from './SchoolsList.js'
 import SchoolPage from './SchoolPage.js'
@@ -34,10 +34,12 @@ class App extends Component {
 
   render() {
     return (
-      <Fragment>
+      <div className={styles.appWrapper}>
+
         <TopNav logged_in={this.state.user} updateCurrentUser={this.updateCurrentUser} />
         
         <Switch>
+
           <Route exact path="/dashboard" render={() => {
             // return (this.state.user 
             //   ? <SchoolsList user={this.state.user}/> 
@@ -63,12 +65,12 @@ class App extends Component {
           />
 
           <Route component={NotFound} />
+
         </Switch>
-      </Fragment>
+
+      </div>
     )
   }
-
 }
   
-
 export default withRouter(App)

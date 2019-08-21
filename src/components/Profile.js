@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Fragment} from 'react';
 
 const Profile = (props) => {
   // const { avatar, username, bio } = props

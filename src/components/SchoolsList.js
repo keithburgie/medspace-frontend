@@ -1,7 +1,7 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import API from '../routes'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
 import {Spinner, Fade, Button, ButtonGroup, Container, Row,  Col, Navbar, Nav, NavItem} from 'reactstrap';
 import {FaPollH, FaPoll, FaFilter } from 'react-icons/fa';
 import Select from "react-select-virtualized";
@@ -76,13 +76,26 @@ class SchoolsList extends Component {
   }
 
   renderSchool = user_school => {
-    const {all_schools} = this.state
+    const {all_schools, colView} = this.state
     const school = all_schools.find(school => school.id === user_school.school_id)
     const todos = user_school.todos
 
     console.log(`renderSchool() => ${school.name.split(" ")[0]}, #${school.id}`)
 
-    return <SchoolCard key={school.id} user_school={user_school} school={school} todos={todos} deleteSchool={this.deleteSchool} />
+    return (
+      <SchoolCard 
+        key={school.id} 
+        user_school={user_school} 
+        school={school} 
+        todos={todos} 
+        deleteSchool={this.deleteSchool} 
+        collapse={colView} 
+      />
+    )
+  }
+
+  colView = (view) => {
+    this.setState({ colView: view })
   }
 
   // TODO: This errors when you try to clear the select menu
@@ -91,8 +104,8 @@ class SchoolsList extends Component {
   : this.setState({ inputValue: ''})
 
   render() {
-    let {user_schools, all_schools, loading} = this.state
-    let user_id = parseInt(localStorage.getItem('user_id'))
+    let {user_schools, all_schools, loading, colView} = this.state
+    // let user_id = parseInt(localStorage.getItem('user_id'))
 
     return (
       <Container fluid>
@@ -103,8 +116,8 @@ class SchoolsList extends Component {
               <Nav>
                 <NavItem>
                   <ButtonGroup>
-                    <Button color="outline-info"><FaPollH /></Button>
-                    <Button color="info"><FaPoll /></Button>
+                    <Button color={colView ? "outline-info" : "info"} onClick={() => this.colView(false)}><FaPollH /></Button>
+                    <Button color={colView ? "info" : "outline-info"} onClick={() => this.colView(true)}><FaPoll /></Button>
                   </ButtonGroup>
                 </NavItem>
                 <NavItem>
@@ -127,10 +140,12 @@ class SchoolsList extends Component {
           </Col>
         </Row>
 
-        <Row className={styles.sideScroll}>
+        <Row data-layout={colView ? 'column' : 'row'}>
             { 
               loading 
-              ? <Fade className={styles.loader}><Spinner color="warning" style={{ width: '10rem', height: '10rem' }} type="grow" /></Fade>
+              ? <Fade className={styles.loader}>
+                  <Spinner color="warning" style={{ width: '10rem', height: '10rem' }} type="grow" />
+                </Fade>
               : user_schools.map(school => this.renderSchool(school))
             }  
         </Row>

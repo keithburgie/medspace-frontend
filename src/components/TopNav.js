@@ -1,10 +1,10 @@
 import React, {Fragment} from 'react';
-import {Route, Link, withRouter} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import styles from './TopNav.module.scss'
-import { Navbar, Container, NavbarBrand, NavItem } from 'reactstrap';
+import { Navbar, NavbarBrand, NavItem } from 'reactstrap';
 
 const TopNav = (props) => {
-  let { location: { pathname } } = props
+  // let { location: { pathname } } = props
   let logged_in = props.logged_in;
   console.log("TopNav logged_in =", logged_in)
   let logout = () => {

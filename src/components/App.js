@@ -1,5 +1,5 @@
 import React, {Component, Fragment} from 'react';
-import {Route, Link, Switch, Redirect, withRouter} from 'react-router-dom'
+import {Route, Switch, Redirect, withRouter} from 'react-router-dom'
 import API from '../routes'
 // import styles from './App.module.scss'
 import TopNav from './TopNav'
@@ -39,9 +39,10 @@ class App extends Component {
         
         <Switch>
           <Route exact path="/dashboard" render={() => {
-            return (this.state.user 
-              ? <SchoolsList user={this.state.user}/> 
-              : <Redirect to="/login" />)
+            // return (this.state.user 
+            //   ? <SchoolsList user={this.state.user}/> 
+            //   : <Redirect to="/login" />)
+            return <SchoolsList user={this.state.user}/>
           }} />
 
           <Route path="/dashboard/:user_school_id" component={SchoolPage} />

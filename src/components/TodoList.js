@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import API from '../routes'
-import { Col, Row, Button, Form, FormGroup, Label, Input} from 'reactstrap';
+import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import { FaPlus as FaAdd } from 'react-icons/fa';
 import styles from './Todo.module.scss';
 import Todo from './Todo.js';

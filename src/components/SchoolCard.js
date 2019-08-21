@@ -1,39 +1,50 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom'
 import {Collapse as SchoolBody, Fade as Card, Button, Col} from 'reactstrap';
-import {FaAngleDown, FaTrashAlt } from 'react-icons/fa';
-import styles from './School.module.scss';
+import {FaTrashAlt } from 'react-icons/fa';
+import styles from './SchoolsList.module.scss';
 import TodoList from './TodoList.js'
 
 class SchoolCard extends Component {
 
   state = { 
     fadeIn: true,
-    collapse: true,
-    status: 'Opened'
+    // collapse: false,
+    // status: 'Opened'
   }
 
-  toggle() { 
-    this.setState({ 
-      collapse: !this.state.collapse 
-    }) 
+  componentDidMount() {
+    this.setState({
+      collapse: !this.props.collapse
+    })
   }
+
+  // toggle(e) { 
+  //   console.log(e)
+  //   this.setState({ 
+  //     collapse: !this.state.collapse 
+  //   }) 
+  // }
 
   render() {
-    let {school, todos, deleteSchool, user_school} = this.props
-    let {fadeIn, collapse} = this.state
+    let {school, todos, deleteSchool, user_school, collapse} = this.props
+    let {fadeIn } = this.state
 
     return (
-      <Col sm={6} md={4} xxl={3}>
+      // <Col sm={6} md={4} xxl={3}>
+      <Col className={styles.col}>
         <Card data-id={school.id} in={fadeIn} className={styles.schoolCard}>
         
-          <header className={styles.collapseHeader}>
+          <header className={styles.cardCollapse}>
 
-            <h3>
+            <h3 className={styles.cardTitle}>
               <Link to={`/dashboard/${user_school.id}`}>
                 {school.name.split(',')[0]}
               </Link>
             </h3>
+
+            <span className={styles.columnHide}><strong>Next Task:</strong> {todos.find(todo => !todo.done).task}</span>
+            <span className={styles.columnHide}>{todos.filter(todo => todo.done).length} of {todos.length} Tasks Complete</span>
 
             <div className={styles.buttonWrapper}>
 
@@ -43,12 +54,12 @@ class SchoolCard extends Component {
                 <FaTrashAlt />
               </Button>
 
-              <Button color="secondary-outline" 
+              {/* <Button color="secondary-outline" 
                 data-status={collapse ? "expand" : "collapse"} 
                 data-id={user_school.id} 
                 onClick={(e) => this.toggle(e)}>
                 <FaAngleDown />
-              </Button>
+              </Button> */}
 
             </div>
 

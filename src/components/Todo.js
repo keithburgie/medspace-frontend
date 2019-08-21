@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import API from '../routes'
 import {Fade} from 'reactstrap';
-import { FaEdit, FaSave, FaRegCircle as FaNoCheck, FaRegCheckCircle as FaChecked, FaTrashAlt } from 'react-icons/fa';
+import {FaRegCircle as FaNoCheck, FaRegCheckCircle as FaChecked, FaTrashAlt } from 'react-icons/fa';
 import Moment from 'react-moment';
 import styles from './Todo.module.scss';
 import {Button} from 'reactstrap';
@@ -86,8 +86,8 @@ class Todo extends Component {
         </div>
 
         <div className={styles.todoGroup}>
-          <span>{todo.note || "(Note Here)"}</span> 
-          <span><Moment calendar={calendarStrings}>{todo.due}</Moment></span>
+          {/* <span>{todo.note || "(Note Here)"}</span>  */}
+          <span>Due <Moment calendar={calendarStrings}>{todo.due}</Moment></span>
         </div>
 
       </Fade>

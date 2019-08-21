@@ -1,16 +1,22 @@
-import React, { Component, Fragment } from 'react';
-import {Fade} from 'reactstrap';
+import React, { Component} from 'react';
+import {Container, Row, Col, Fade} from 'reactstrap';
 import API from '../routes'
 import { Link } from 'react-router-dom'
-// import styles from './SchoolPage.module.scss';
-// import TodoList from './TodoList.js'
+import TodoList from './TodoList.js'
+import EssayTabs from './EssayTabs.js'
 
 class SchoolPage extends Component {
 
-  state = {
-    user_school: {},
-    school: {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      user_school: {},
+      school: {},
+      todos: []
+    }
+    this.handleChange = this.handleChange.bind(this)
   }
+  
 
   componentDidMount() {
     // match and params are passed to all routes from router
@@ -20,16 +26,41 @@ class SchoolPage extends Component {
     .then(({data}) => {
       this.setState({ 
         user_school: data,
-        school: data.school
+        school: data.school,
+        todos: data.todos
       })
     })
   }
 
+  handleChange(value) {
+    this.setState({ text: value })
+  }
+
+
   render() {
+
+    const {school, user_school, todos} = this.state
+
     return (
-      <Fade>
-        <h1><Link to={"/dashboard"}> &lt;&lt; Back </Link> | {this.state.school.name}</h1>
-      </Fade>
+      <Container fluid>
+        <Fade>
+          <Row>
+            <Col>
+              <h1><Link to={"/dashboard"}> &lt;&lt; Back </Link> | {this.state.school.name}</h1>
+            </Col>
+          </Row>
+
+          <Row>
+            <Col sm={4}>
+              <TodoList key={user_school.id} user_school={user_school} todos={todos} />
+            </Col>
+            <Col sm={8}>
+              <h2>Essays</h2>
+              <EssayTabs user_school={user_school} school={school} />
+            </Col>
+          </Row>
+        </Fade>
+      </Container>
     )
   }
 }

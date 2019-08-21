@@ -23,7 +23,8 @@ class SchoolsList extends Component {
       user_schools: [],
       all_schools: [],
       fadeIn: true,
-      inputValue: ''
+      inputValue: '',
+      colView: true
     }
   
 

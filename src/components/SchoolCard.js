@@ -24,7 +24,7 @@ class SchoolCard extends Component {
     let {fadeIn, collapse} = this.state
 
     return (
-      <Col sm={6} lg={4} xl={3}>
+      <Col sm={6} md={4} xxl={3}>
         <Card data-id={school.id} in={fadeIn} className={styles.schoolCard}>
         
           <header className={styles.collapseHeader}>
@@ -49,7 +49,7 @@ class SchoolCard extends Component {
                 onClick={(e) => this.toggle(e)}>
                 <FaAngleDown />
               </Button>
-              
+
             </div>
 
           </header>

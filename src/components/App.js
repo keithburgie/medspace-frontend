@@ -20,17 +20,12 @@ class App extends Component {
   }
 
   componentDidMount(){
-    //check to see if there is a jwt?
-    //if there is, fetch to get the user asnd update the user state
-    let token = localStorage.getItem("jwt")
-    if(token){
-      fetch("http://localhost:3000/api/v1/profile", {
-        headers: {"Authentication": `Bearer ${token}`}
-      })
-      .then(res => res.json())
+    const token = localStorage.getItem("jwt")
+
+    if (token) {
+      API.get('profile', { headers: {"Authentication": `Bearer ${token}`} })
       .then(user => {
-        console.log("App CDM: ", user)
-      	this.updateCurrentUser(user)
+        this.updateCurrentUser(user.data)
       })
     }
     //if not, let them log in

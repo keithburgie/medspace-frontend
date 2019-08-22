@@ -10,17 +10,42 @@
   position: relative;
   @include border();
   margin-bottom: $spacer;
-  padding: $spacer/2 $spacer;
+  padding: $spacer/2 $spacer/2 $spacer;
   opacity: 1;
   transition: all .5s linear;
 
   .todoGroup {
     display: flex;
-    justify-content: space-between;
+    font-size: 1.1em;
+    position: relative;
+
+    .delete {
+      padding: 0;
+      font-size: inherit;
+      display: inherit;
+      position: absolute;
+      right: 0;
+      top: 0;
+      color: $turqoise;
+      transition: color .2s linear;
+
+      &:hover {
+        color: $darkTurqoise;
+        text-decoration: none;
+      }
+    }
+  }
+
+  .dueDate {
+    position: absolute;
+    right: 10px;
+    bottom: -10px;
+    z-index: 2;
+    background: white;
+    padding: 0 2px;
+    border: 1px solid white;
   }
 }
-
-
 
 .taskGroup {
   display: flex;
@@ -31,25 +56,31 @@
 .todoForm {
   display: flex;
   flex: 1;
+  // height: $formHeight;
+  line-height: 1.2;
 
   input[type="submit"] {
-    &.hide {  display:none; }
+    z-index: 2;
+
+    &.hide {  
+      display: none; 
+    }
   }
 }
 
 
 
 .todoInput {
+  flex: 1;
   border: none;
-  font-size: 1.25rem;
-  line-height: 1;
-  flex: 1 1;
+  resize: none;
+  padding: 0 1.25em;
 
   &:focus {
     outline: none;
     // color: red;
     // text-decoration: underline;
-    border: 1px solid;
+    // border: 1px solid;
   }
 }
 
@@ -63,17 +94,26 @@
 
   > .formGroup {
     flex: 1 0 auto;
+    margin-right: $spacer;
+
+    &:last-child {
+      margin-right: 0;
+    }
 
     button {
-      width: 100%;
+      margin-left: $spacer;
+      background-color: $turqoise;
+      border-color: $turqoise;
     }
   }
 }
 
 .checkbox {
+  display: inherit;
   transition: all .1s linear;
-  font-size: 1.5rem;
-  margin-right: .25rem;
+  position: absolute;
+  top: 3px;
+  left: 0;
 
   &:hover { 
     cursor: pointer; 
@@ -85,22 +125,5 @@
     // position: absolute;
     // background: white;
     padding-bottom: 2px;
-  }
-}
-
-.actions {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  background: white;
-
-  button {
-    border-radius: 2px;
-    height: 1.75em;
-    width: 1.75em;
-    line-height: 1;
-    border: 1px solid;
-    padding: 0;
-    font-size: 1em;
   }
 }

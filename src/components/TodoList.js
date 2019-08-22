@@ -41,6 +41,7 @@ class TodoList extends Component {
   }
 
   addTodo = (user_school_id) => {
+    debugger
     let todo = {
       user_school_id: user_school_id,
       task: this.state.newTodo,
@@ -52,6 +53,7 @@ class TodoList extends Component {
 
     API.post(`todos`, todo)
     .then(todo => {
+      debugger
       this.setState({
         todos: [...this.state.todos, todo.data]
       })
@@ -83,7 +85,7 @@ class TodoList extends Component {
 
           <FormGroup className={styles.formGroup}>
             <Label for="exampleText">New Todo</Label>
-            <Input 
+            <Input required
               type="text"
               name="text"
               id="exampleText"
@@ -95,7 +97,7 @@ class TodoList extends Component {
 
           <FormGroup className={styles.formGroup}>
             <Label for="exampleDate">Due Date</Label>
-            <Input
+            <Input required
               type="date"
               name="date"
               id="exampleDate"

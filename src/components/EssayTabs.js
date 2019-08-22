@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { TabContent, TabPane, Nav,  Row, Col, NavItem, NavLink } from 'reactstrap';
 import EssayEditor from './EssayEditor.js'
+import styles from './EssayEditor.module.scss';
 import classnames from 'classnames';
 
 export default class EssayTabs extends Component {
@@ -26,7 +27,7 @@ export default class EssayTabs extends Component {
     const {user_school} = this.props 
 
     return (
-      <div>
+      <div className={styles.tabs}>
         <Nav tabs>
           {prompts ? prompts.map((prompt, index) => (  
             <NavItem key={index}>
@@ -42,18 +43,19 @@ export default class EssayTabs extends Component {
         <TabContent activeTab={this.state.activeTab}>
 
         {prompts ? prompts.map((prompt, index) => (  
-          <TabPane key={index} tabId={index + 1}>
-            <Row>
-              <Col sm="12">
-                <h4>{prompt.text} ({prompt.limit} word limit)</h4>
-                <EssayEditor
-                  prompt_id={prompt.id}
-                  limit={prompt.limit}
-                  user_school={this.props.user_school}
-                  essay={user_school.user.essays.find(essay => essay.prompt_id === prompt.id) || null}
-                  />
-              </Col>
-            </Row>
+          <TabPane key={index} tabId={index + 1} className={styles.essayTabPane}>
+            <div className={styles.essayContainer}>
+              <blockquote>
+                <h4>{prompt.text} <span className={styles.noWrap}>({prompt.limit} word limit)</span></h4>
+              </blockquote>
+              
+              <EssayEditor
+                prompt_id={prompt.id}
+                limit={prompt.limit}
+                user_school={this.props.user_school}
+                essay={user_school.user.essays.find(essay => essay.prompt_id === prompt.id) || null}
+                />
+            </div>
           </TabPane>
         )) : console.log("no prompt text yet")
         }          

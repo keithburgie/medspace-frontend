@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import API from '../routes'
-import { EditorState, ContentState, Editor, convertToRaw, convertFromRaw } from 'draft-js';
+import { EditorState, ContentState, convertToRaw, Editor } from 'draft-js';
+import styles from './EssayEditor.module.scss';
 import debounce from 'lodash/debounce';
 
 class EssayEditor extends Component {
@@ -9,7 +10,8 @@ class EssayEditor extends Component {
     this.state = {
       essay: null,
       wordCount: 0,
-      wordLimit: 0
+      wordLimit: 0,
+      saved: false
     };
   }
 
@@ -18,9 +20,14 @@ class EssayEditor extends Component {
     const newText = obj.blocks[0].text
 
     if (this.state.essay !== null) {
-      const {essay} = this.props
+      let {essay} = this.state
       API.patch(`essays/${essay.id}`, {text: newText})
-      .then(console.log("Essay saved"))
+      .then(essay => {
+        this.setState({ saved: true })
+        this.timer = setTimeout(_ => {
+          this.setState({saved: false});
+        }, 2000);
+      })
     } 
     else {
       API.post(`essays`, {
@@ -28,10 +35,18 @@ class EssayEditor extends Component {
         text: newText,
         user_id: 1
       }).then(essay => {
-        this.setState({ essay: essay })
+        this.setState({ 
+          essay: essay.data,
+          saved: true
+        }, () => {
+          this.timer = setTimeout(_ => {
+            this.setState({saved: false});
+          }, 2000);
+        })
       })
     }
-  }, 2000);
+
+  }, 1000);
 
   updateWordCount = (content) => {
     const obj = convertToRaw(content)
@@ -55,7 +70,7 @@ class EssayEditor extends Component {
 
     if (essay !== null) {
       this.setState({
-        essay: essay.id,
+        essay: essay,
         wordCount: essay.text.split(' ').length,
         editorState: EditorState.createWithContent(ContentState.createFromText(essay.text)) 
       })
@@ -69,7 +84,7 @@ class EssayEditor extends Component {
 
   render() {
 
-    let {wordCount, wordLimit, editorState} = this.state
+    let {wordCount, wordLimit, editorState, saved} = this.state
     
 
     if (!this.state.editorState) {
@@ -78,12 +93,12 @@ class EssayEditor extends Component {
       );
     }
     return (
-      <div>
+      <div className={styles.textEditor}>
         <Editor
           editorState={editorState}
           onChange={this.onChange}
         />
-        <span>Word Count: {wordCount}/{wordLimit}</span>
+        <span className={styles.wordCount}>Word Count: {wordCount}/{wordLimit}<span data-saved className={saved ? styles.saved : ''}>Essay Saved...</span></span>
       </div>
     );
   }

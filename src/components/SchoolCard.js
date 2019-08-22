@@ -8,9 +8,7 @@ import TodoList from './TodoList.js'
 class SchoolCard extends Component {
 
   state = { 
-    fadeIn: true,
-    // collapse: false,
-    // status: 'Opened'
+    fadeIn: true
   }
 
   componentDidMount() {
@@ -19,13 +17,6 @@ class SchoolCard extends Component {
     })
   }
 
-  // toggle(e) { 
-  //   console.log(e)
-  //   this.setState({ 
-  //     collapse: !this.state.collapse 
-  //   }) 
-  // }
-
   render() {
     let {school, todos, deleteSchool, user_school, collapse} = this.props
     let {fadeIn } = this.state
@@ -33,7 +24,7 @@ class SchoolCard extends Component {
     return (
       // <Col sm={6} md={4} xxl={3}>
       <Col className={styles.col}>
-        <Card data-id={school.id} in={fadeIn} className={styles.schoolCard}>
+        <Card className={styles.schoolCard} data-id={school.id} in={fadeIn}>
         
           <header className={styles.cardCollapse}>
 
@@ -53,13 +44,6 @@ class SchoolCard extends Component {
                 onClick={deleteSchool}> 
                 <FaTrashAlt />
               </Button>
-
-              {/* <Button color="secondary-outline" 
-                data-status={collapse ? "expand" : "collapse"} 
-                data-id={user_school.id} 
-                onClick={(e) => this.toggle(e)}>
-                <FaAngleDown />
-              </Button> */}
 
             </div>
 

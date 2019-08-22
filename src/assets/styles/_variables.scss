@@ -3,6 +3,8 @@ $border-color: rgba(141, 137, 137, 0.5);
 $light-bg: #f8f9fa;
 $container-bg: white;
 $theme-color: gold;
+$turqoise: #17a2b8;
+$darkTurqoise: #0e545f;
 
 @mixin containerColor($background, $text) {
   background: $background;

@@ -1,0 +1,57 @@
+@import '../assets/styles/variables.scss';
+
+.essayTabPane {
+  background: white;
+
+  .essayContainer {
+    padding: $spacer;
+    border: 1px solid #dee2e6;
+    border-top: none;
+  }
+
+  blockquote {
+    padding: 2.25em 4em;
+    background: #c2c2c2;
+  }
+}
+
+.textEditor {
+  padding: 0em $spacer;
+  text-align: justify;
+  font-size: 1.25em;
+}
+
+.tabs {
+  margin-top: -3.6em; // for presentation only
+  a {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.wordCount {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px dashed #c2c2c2;
+  margin-top: $spacer;
+  padding-top: $spacer;
+}
+
+[data-saved] {
+  opacity: 0;
+
+  &.saved {
+    animation: fade 2s ease-out;
+  }
+  
+}
+
+@keyframes fade {
+  0%,100% { opacity: 0 }
+  30%, 70% { opacity: 1 }
+}
+
+.noWrap {
+  white-space: nowrap;
+}

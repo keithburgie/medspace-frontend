@@ -1,0 +1,27 @@
+@import '../assets/styles/variables.scss';
+
+.subnav {
+  background: #FAF7F2!important;
+  display: flex;
+  margin-top: -$spacer * 1.1;
+  margin-bottom: $spacer;
+  font-size: 1.1em;
+
+  > ul {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+
+    > li {
+      &:last-child a {
+        color: black!important;
+      }
+
+      a {
+        padding-top: 0;
+      margin-top: 0.5rem;
+      padding-bottom: 0.1rem;
+      }
+    }
+  }
+}

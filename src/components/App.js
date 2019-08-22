@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import {Route, Switch, Redirect, withRouter} from 'react-router-dom'
 import API from '../routes'
 import styles from './App.module.scss'
@@ -40,29 +40,29 @@ class App extends Component {
         
         <Switch>
 
-          <Route exact path="/dashboard" render={() => {
-            // return (this.state.user 
+        <Route exact path="/login" render={()=> (
+            this.state.user 
+              ? <Redirect to="/dashboard" /> 
+              : <LoginForm updateCurrentUser={this.updateCurrentUser}/>
+            )}
+          />
+
+          <Route exact path="/profile" render={()=> (
+            this.state.user 
+              ? <Profile user={this.state.user}/> 
+              : <Redirect to="/login" />
+            )}
+          />
+
+          <Route exact path="/dashboard" render={() => (
+            // this.state.user 
             //   ? <SchoolsList user={this.state.user}/> 
-            //   : <Redirect to="/login" />)
-            return <SchoolsList user={this.state.user}/>
-          }} />
+            //   : <Redirect to="/login" />
+            <SchoolsList user={this.state.user }/>
+            )}
+          />
 
           <Route path="/dashboard/:user_school_id" component={SchoolPage} />
-
-          <Route exact path="/profile" render={()=> {
-            return (this.state.user 
-              ? <Profile user={this.state.user}/> 
-              : <Redirect to="/login" />)
-            }
-          }/>
-
-          <Route exact path="/login" render={()=> {
-            return (this.state.user 
-              ? <Redirect to="/profile" /> 
-              : <LoginForm updateCurrentUser={this.updateCurrentUser}/>)
-            }
-          }
-          />
 
           <Route component={NotFound} />
 

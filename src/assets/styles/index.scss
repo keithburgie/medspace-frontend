@@ -17,3 +17,19 @@ code {
 .container-fluid {
   // max-width: $max-width;
 }
+
+.css-qnsmx9-indicatorContainer {
+  // close button on select menu breaks site
+  display: none!important;
+}
+
+.public-DraftStyleDefault-block.public-DraftStyleDefault-ltr {
+  min-height: 450px;
+}
+
+.navbar-brand svg {
+    &:hover {
+      animation:spin 1s linear infinite;
+    }
+}
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }

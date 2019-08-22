@@ -1,9 +1,10 @@
-import React, { Component} from 'react';
-import {Container, Row, Col, Fade} from 'reactstrap';
+import React, { Component, Fragment } from 'react';
+import {Container, Row, Col, Fade, Navbar, Nav, NavItem} from 'reactstrap';
 import API from '../routes'
 import { Link } from 'react-router-dom'
 import TodoList from './TodoList.js'
 import EssayTabs from './EssayTabs.js'
+import styles from './SchoolPage.module.scss';
 
 class SchoolPage extends Component {
 
@@ -39,28 +40,29 @@ class SchoolPage extends Component {
 
   render() {
 
-    const {school, user_school, todos} = this.state
+    let {school, user_school, todos} = this.state
 
     return (
-      <Container fluid>
-        <Fade>
-          <Row>
-            <Col>
-              <h1><Link to={"/dashboard"}> &lt;&lt; Back </Link> | {this.state.school.name}</h1>
-            </Col>
-          </Row>
-
-          <Row>
-            <Col sm={4}>
-              <TodoList key={user_school.id} user_school={user_school} todos={todos} />
-            </Col>
-            <Col sm={8}>
-              <h2>Essays</h2>
-              <EssayTabs user_school={user_school} school={school} />
-            </Col>
-          </Row>
-        </Fade>
-      </Container>
+      <Fragment>
+        <Navbar color="light" light expand="md" className={styles.subnav}>
+          <Nav navbar>
+            <NavItem><Link to={"/dashboard"}> &lt;&lt; Back </Link></NavItem>
+            <NavItem><Link to={"#"}>{school.name}</Link></NavItem>
+          </Nav>
+        </Navbar>
+        <Container fluid>
+          <Fade>
+            <Row>
+              <Col sm={4} md={6}>
+                <TodoList key={user_school.id} user_school={user_school.id} todos={todos} />
+              </Col>
+              <Col sm={8} md={6}>
+                <EssayTabs user_school={user_school} school={school} />
+              </Col>
+            </Row>
+          </Fade>
+        </Container>
+      </Fragment>
     )
   }
 }

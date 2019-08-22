@@ -3,6 +3,24 @@
 .topnav {
   @include containerColor($theme-color, white);
   margin-bottom: $spacer;
+  font-size: 1.25em;
+  padding: 0.5em;
+
+  a {
+    transition: color .1s linear;
+    color: #464646;
+    &:hover {
+      color: black;
+    }
+  }
+
+  > ul {
+    flex-direction: row;
+  }
+
+  svg {
+    margin-top: -4px;
+  }
 }
 
 li {

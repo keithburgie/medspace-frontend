@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import API from '../routes'
 import {Fade} from 'reactstrap';
-import {FaRegCircle as FaNoCheck, FaRegCheckCircle as FaChecked, FaTrashAlt } from 'react-icons/fa';
+import {FaRegCircle as FaNoCheck, FaRegCheckCircle as FaChecked, FaTimes } from 'react-icons/fa';
 import Moment from 'react-moment';
 import styles from './Todo.module.scss';
 import {Button} from 'reactstrap';
@@ -59,7 +59,7 @@ class Todo extends Component {
 
         <div className={styles.todoGroup}>
 
-          <span className={styles.taskGroup}>
+          {/* <span className={styles.taskGroup}> */}
 
             <span data-done={this.state.done} className={styles.checkbox}  >
               { this.state.done 
@@ -77,18 +77,12 @@ class Todo extends Component {
               <input className={styles.hide} type="submit" value="save"/>
             </form>
 
-          </span> 
+          {/* </span>  */}
 
-          <span className={styles.actions}>
-            {/* <Button data-id={todo.id} color="danger" size="sm"><FaEdit /></Button> */}
-            <Button data-id={todo.id} onClick={deleteTodo} color="outline-danger" size="sm"><FaTrashAlt /></Button>
-          </span>
+          <Button data-id={todo.id} onClick={deleteTodo} color="link" size="lg" className={styles.delete}><FaTimes /></Button>
         </div>
 
-        <div className={styles.todoGroup}>
-          {/* <span>{todo.note || "(Note Here)"}</span>  */}
-          <span>Due <Moment calendar={calendarStrings}>{todo.due}</Moment></span>
-        </div>
+        <small className={styles.dueDate}>Due <Moment calendar={calendarStrings}>{todo.due}</Moment></small>
 
       </Fade>
     )

@@ -8,6 +8,25 @@
   position: relative;
   height: 100vh;
   width: 100%;
+  background: white;
+  overflow: scroll;
+
+  > nav {
+    flex: 0 0 auto;
+  }
+  > div {
+    flex: 1 1 100%;
+  }
+}
+
+a  {
+  color: $turqoise;
+  transition: color .2s linear;
+
+  &:hover {
+    color: $darkTurqoise;
+    text-decoration: none;
+  }
 }
 
 // .App {
